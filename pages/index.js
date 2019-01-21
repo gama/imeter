@@ -1,50 +1,47 @@
-import React from 'preact'
-import { connect } from 'preact-redux' 
-import { startClock, serverRenderCock } from '../store'
-import Link from 'next/link'
-import Head from '../components/head.js'
-import './style.sass'
+import { Component } from 'preact'
+import { connect }   from 'preact-redux'
+import Layout        from '../components/layout'
 
-class Index extends React.Component {
-    static getInitialProps({ reduxStore, req }) {
-        const isServer = !!req
-        reduxStore.dispatch(serverRenderClock(isServer))
-        return {}
-    }
-
-    componentDidMount() {
-        const { dispatch } = this.props
-        this.timer = startClock(dispatch)
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timer)
-    }
-
+class Index extends Component {
     render() {
         return (
-            <div className="next-page">
+            <Layout>
                 <section className="section">
-                    <Head />
-                    <nav className="navbar" role="navigation" aria-label="main navigation">
-                        <div className="navbar-brand">
-                            <Link href="/">
-                                <a className="navbar-item">
-                                    <img className="logo" src="/static/kiom-small.png"></img>
-                                </a>
-                            </Link>
-                            <span className="navbar-item">Welcome to next.js (v2)!</span>
-                        </div>
-                        <div className="navbar-end">
-                            <Link href="/other"><a className="navbar-item">Other</a></Link>
-                            <Link href="/about"><a className="navbar-item">About</a></Link>
-                        </div>
-                    </nav>
+                    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                    sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                    magna aliquyam erat, sed diam voluptua. At vero eos et
+                    accusam et justo duo dolores et ea rebum. Stet clita kasd
+                    gubergren, no sea takimata sanctus est Lorem ipsum dolor
+                    sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+                    elitr,  sed diam nonumy eirmod tempor invidunt ut labore et
+                    dolore magna aliquyam erat, sed diam voluptua. At vero eos
+                    et accusam et justo duo dolores et ea rebum. Stet clita
+                    kasd gubergren, no sea takimata sanctus est Lorem ipsum
+                    dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+                    sadipscing elitr,  sed diam nonumy eirmod tempor invidunt
+                    ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                    At vero eos et accusam et justo duo dolores et ea rebum.
+                    Stet clita kasd gubergren, no sea takimata sanctus est
+                    Lorem ipsum dolor sit amet.</p>
+
+                    <p>Duis autem vel eum iriure dolor in hendrerit in vulputate
+                    velit esse molestie consequat, vel illum dolore eu feugiat
+                    nulla facilisis at vero eros et accumsan et iusto odio
+                    dignissim qui blandit praesent luptatum zzril delenit augue
+                    duis dolore te feugait nulla facilisi. Lorem ipsum dolor
+                    sit amet, consectetuer adipiscing elit, sed diam nonummy
+                    nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+                    volutpat.</p>
+
+                    <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation
+                    ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
+                    consequat. Duis autem vel eum iriure dolor in hendrerit in
+                    vulputate velit esse molestie consequat, vel illum dolore
+                    eu feugiat nulla facilisis at vero eros et accumsan et
+                    iusto odio dignissim qui blandit praesent luptatum zzril
+                    delenit augue duis dolore te feugait nulla facilisi.</p>
                 </section>
-                <section className="section">
-                    <p>This is an initial paragraph, to help us get started with the immediate feedback thing</p>
-                </section>
-            </div>
+            </Layout>
         )
     }
 }
