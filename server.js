@@ -4,17 +4,17 @@ const port = parseInt(process.env.PORT, 10) || 3000
 const dev  = process.env.NODE_ENV !== 'production'
 
 require('@zeit/next-preact/alias')()
-const { createServer } = require('http')
-const { parse }        = require('url')
-const next             = require('next')
+const next    = require('next')
+const express = require('express')
 
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
-    createServer((request, response) => {
-        handle(request, response, parse(request.url, true))
-    }).listen(port, (error) => {
+    const server = express()
+    server.get('/tv-show/:id', (req, res) => app.render(req, res, '/tv-show', {id: req.params.id}))
+    server.get('*',            (req, res) => handle(req, res))
+    server.listen(port, (error) => {
         if (error)
             throw error
         console.log(`> Ready on http://localhost:${port}`)

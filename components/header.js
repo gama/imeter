@@ -16,6 +16,7 @@ export default function Header() {
                 <div className="navbar-end">
                     <Link href="/clock"><a className="navbar-item">Clock</a></Link>
                     <Link href="/counter"><a className="navbar-item">Counter</a></Link>
+                    <Link href="/tv-shows"><a className="navbar-item">Tv Shows</a></Link>
                     <Link href="/about"><a className="navbar-item">About</a></Link>
                 </div>
             </nav>
