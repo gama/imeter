@@ -1,39 +1,35 @@
-import { Component } from 'preact'
-import { connect } from 'preact-redux'
+import React, { Component } from 'preact'
+import { connect }          from 'preact-redux'
 import { incrementCount, decrementCount, resetCount } from '../store'
 
 class Counter extends Component {
-  increment = () => {
-    const {dispatch} = this.props
-    dispatch(incrementCount())
-  }
+    increment() {
+        this.props.dispatch(incrementCount())
+    }
 
-  decrement = () => {
-    const {dispatch} = this.props
-    dispatch(decrementCount())
-  }
+    decrement() {
+        this.props.dispatch(decrementCount())
+    }
 
-  reset = () => {
-    const {dispatch} = this.props
-    dispatch(resetCount())
-  }
+    reset() {
+        this.props.dispatch(resetCount())
+    }
 
-  render () {
-    const { count } = this.props
-    return (
-      <div>
-        <h1>Count: <span>{count}</span></h1>
-        <button onClick={this.increment}>+1</button>
-        <button onClick={this.decrement}>-1</button>
-        <button onClick={this.reset}>Reset</button>
-      </div>
-    )
-  }
+    render() {
+        const { count } = this.props
+        return (
+            <div>
+                <h1>Count: <span>{count}</span></h1>
+                <button onClick={this.increment.bind(this)}>+1</button>
+                <button onClick={this.decrement.bind(this)}>-1</button>
+                <button onClick={this.reset.bind(this)}>Reset</button>
+            </div>
+        )
+    }
 }
 
-function mapStateToProps (state) {
-  const {count} = state
-  return {count}
+function mapStateToProps(state) {
+    return {count: state.count}
 }
 
 export default connect(mapStateToProps)(Counter)

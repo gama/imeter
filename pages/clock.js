@@ -1,7 +1,7 @@
-import { Component } from 'preact'
-import { connect }   from 'preact-redux'
-import Layout        from '../components/layout'
-import Clock         from '../components/clock'
+import React, { Component }              from 'preact'
+import { connect }                       from 'preact-redux'
+import Layout                            from '../components/layout'
+import Clock                             from '../components/clock'
 import { startClock, serverRenderClock } from '../store'
 
 class ClockPage extends Component {
@@ -12,8 +12,7 @@ class ClockPage extends Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props
-        this.timer = startClock(dispatch)
+        this.timer = startClock(this.props.dispatch)
     }
 
     componentWillUnmount() {

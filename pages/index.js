@@ -1,6 +1,6 @@
-import { Component } from 'preact'
-import { connect }   from 'preact-redux'
-import Layout        from '../components/layout'
+import React, { Component } from 'preact'
+import { connect }          from 'preact-redux'
+import Layout               from '../components/layout'
 
 class Index extends Component {
     render() {

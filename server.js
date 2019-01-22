@@ -1,3 +1,5 @@
+/* eslint-disable no-undef, no-console */
+
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev  = process.env.NODE_ENV !== 'production'
 

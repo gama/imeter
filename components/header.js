@@ -1,6 +1,7 @@
-import Link from 'next/link'
+import React from 'preact'
+import Link  from 'next/link'
 
-export default function() {
+export default function Header() {
     return (
         <section className="section header">
             <nav className="navbar" role="navigation" aria-label="main navigation">

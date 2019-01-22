@@ -1,6 +1,7 @@
+import React                  from 'preact'
 import NextApp, { Container } from 'next/app'
-import withReduxStore from '../lib/with-redux-store'
-import { Provider } from 'preact-redux'
+import withReduxStore         from '../lib/with-redux-store'
+import { Provider }           from 'preact-redux'
 
 class App extends NextApp {
     render() {

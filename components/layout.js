@@ -1,8 +1,9 @@
+import React    from 'preact'
 import NextHead from 'next/head'
 import Header   from './header'
-import styles   from './style.global.sass'
+import './style.global.sass'
 
-export default function(props) {
+export default function Layout(props) {
     return (
         <div className="next-page main-container">
             <NextHead>
@@ -11,7 +12,7 @@ export default function(props) {
             </NextHead>
             <Header />
             <section className="section main-content">
-            {props.children}
+                {props.children}
             </section>
         </div>
     )
