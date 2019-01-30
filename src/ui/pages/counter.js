@@ -1,7 +1,7 @@
 import React       from 'preact'
-import { connect } from 'preact-redux'
 import Layout      from '../components/layout'
 import Counter     from '../components/counter'
+import withAuth    from '../lib/with-auth.js'
 
 function CounterPage() {
     return (
@@ -11,4 +11,4 @@ function CounterPage() {
     )
 }
 
-export default connect()(CounterPage)
+export default withAuth(CounterPage)

@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 const getLocalIdent = require('css-loader/lib/getLocalIdent')
 const withPreact    = require('@zeit/next-preact')
 const withSass      = require('@zeit/next-sass')

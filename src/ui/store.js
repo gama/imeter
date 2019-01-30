@@ -5,14 +5,17 @@ import thunkMiddleware from 'redux-thunk'
 const initialState = {
     lastUpdate: 0,
     light: false,
-    count: 0
+    count: 0,
+    authToken: null
 }
 
 export const actionTypes = {
     TICK:      'TICK',
     INCREMENT: 'INCREMENT',
     DECREMENT: 'DECREMENT',
-    RESET:     'RESET'
+    RESET:     'RESET',
+    LOGIN:     'LOGIN',
+    LOGOUT:    'LOGOUT'
 }
 
 // REDUCERS

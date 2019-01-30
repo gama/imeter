@@ -1,7 +1,8 @@
 import React                  from 'preact'
 import NextApp, { Container } from 'next/app'
-import withReduxStore         from '../lib/with-redux-store'
 import { Provider }           from 'preact-redux'
+import withReduxStore         from '../lib/with-redux-store'
+import withAuth               from '../lib/with-auth'
 
 class App extends NextApp {
     render() {
@@ -16,4 +17,4 @@ class App extends NextApp {
     }
 }
 
-export default withReduxStore(App)
+export default withReduxStore(withAuth(App))

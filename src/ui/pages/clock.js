@@ -6,6 +6,7 @@ import { startClock, serverRenderClock } from '../store'
 
 class ClockPage extends Component {
     static getInitialProps({ reduxStore, req }) {
+        console.log('CLOCK PAGE')
         const isServer = !!req
         reduxStore.dispatch(serverRenderClock(isServer))
         return {}

@@ -1,7 +1,9 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es6": true
+        "amd":     true,
+        "node":    true,
+        "es6":     true
     },
     "extends": [
         "eslint:recommended",
@@ -39,6 +41,7 @@ module.exports = {
             "error",
             "never"
         ],
+        "no-console": "off",
         "react/prop-types": "off"
     }
 };

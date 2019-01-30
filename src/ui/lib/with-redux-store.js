@@ -1,5 +1,5 @@
 import React from 'preact'
-import { initializeStore } from '../store'
+import { initializeStore } from '../state/store'
 
 const isServer = typeof window === 'undefined'
 const __NEXT_REDUX_STORE__ = '__NEXT_REDUX_STORE__'
@@ -32,18 +32,15 @@ export default function withReduxStore(App) {
                 appProps = await App.getInitialProps(appContext)
             }
 
-            return {
-                ...appProps,
-                initialReduxState: reduxStore.getState()
-            }
+            return {...appProps, initialReduxState: reduxStore.getState()}
         }
 
-        constructor (props) {
+        constructor(props) {
             super(props)
             this.reduxStore = getOrCreateStore(props.initialReduxState)
         }
 
-        render () {
+        render() {
             return <App {...this.props} reduxStore={this.reduxStore} />
         }
     }
