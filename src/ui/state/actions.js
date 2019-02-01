@@ -35,10 +35,10 @@ export const resetCount = () => dispatch => {
     return dispatch({ type: actionTypes.RESET })
 }
 
-export const login = (username, nextUrl) => async dispatch => {
+export const login = (username, password, rememberMe, nextUrl) => async dispatch => {
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await fetchWithPost('/api/login', { username })
+        const response = await fetchWithPost('/api/auth', { username, password, 'remember-me': rememberMe })
         const data     = await response.json()
         if (!response.ok)
             throw data
@@ -53,7 +53,7 @@ export const login = (username, nextUrl) => async dispatch => {
 export const logout = () => async dispatch => {
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await fetchWithDelete('/api/logout')
+        const response = await fetchWithDelete('/api/auth')
         const data     = await response.json()
         if (!response.ok)
             throw data

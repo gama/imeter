@@ -1,14 +1,14 @@
-const _     = require('lodash')
-const USERS = require('./db/users')
+const { usersDb } = require('./db')
 
 async function index(ctx) {
-    ctx.body = {'users': USERS}
+    const users = await usersDb.find({})
+    console.log('users: ', users)
+    ctx.body = {'users': users}
 }
 
 async function show(ctx) {
-    const user = _.find(USERS, {id: ctx.query.id})
-    if (!user)
-        throw 404
+    const user = await usersDb.findOne({_id: ctx.params.id})
+    ctx.assert(user, 'user not found', 404)
     ctx.body = user
 }
 

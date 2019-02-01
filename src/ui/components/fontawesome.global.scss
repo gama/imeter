@@ -1,0 +1,12 @@
+$fa-url-prefix: "http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/";
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('#{$fa-url-prefix}/fontawesome-webfont.eot');
+  src: url('#{$fa-url-prefix}/fontawesome-webfont.eot?#iefix')             format('embedded-opentype'),
+       url('#{$fa-url-prefix}/fontawesome-webfont.woff2')                  format('woff2'),
+       url('#{$fa-url-prefix}/fontawesome-webfont.woff')                   format('woff'),
+       url('#{$fa-url-prefix}/fontawesome-webfont.ttf')                    format('truetype'),
+       url('#{$fa-url-prefix}/fontawesome-webfont.svg#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

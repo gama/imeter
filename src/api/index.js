@@ -1,25 +1,28 @@
-const Router   = require('koa-router')
-const chokidar = require('chokidar')
-const path     = require('path')
+const Router     = require('koa-router')
+const bodyParser = require('koa-body')
+const chokidar   = require('chokidar')
+const path       = require('path')
 
 module.exports = {mount}
 
-const isProd = process.env.NODE_ENV === 'production'
+const isDev = process.env.NODE_ENV !== 'production'
 let routes, allowedMethods
 
 function mount(server, prefix = undefined) {
-    const remounting = (routes || allowedMethods)
+    const initialMount = (!routes && !allowedMethods)
+    if (initialMount) {
+        server.use(jsonErrors())
+        server.use(bodyParser())
+        if (isDev)
+            setupWatcher(() => mount(server, prefix))
+    }
+
     const router     = createRouter(prefix)
     routes           = useMiddleware(server, router.routes(), routes)
     allowedMethods   = useMiddleware(server, router.allowedMethods(), allowedMethods)
 
-    if (isProd)
-        return
-
-    if (remounting)
+    if (isDev && !initialMount)
         server.recompose()
-    else
-        setupWatcher(() => mount(server, prefix))
 }
 
 function createRouter(prefix) {
@@ -45,8 +48,9 @@ function setupWatcher(remount) {
     console.log('INFO: watching folder "%s"', path.resolve(__dirname))
     const watcher = chokidar.watch(path.resolve(__dirname), {useFsEvents: true, usePolling: false})
     watcher.on('change', (path) => {
+        console.debug('on change')
         const invalidate = (id) => {
-            // console.debug('removing %s from require.cache', id)
+            console.debug('removing %s from require.cache', id)
             delete require.cache[id]
         }
 
@@ -58,4 +62,16 @@ function setupWatcher(remount) {
 
         remount()
     })
+}
+
+function jsonErrors() {
+    return async (ctx, next) => {
+        try {
+            await next()
+        } catch (err) {
+            ctx.type = 'json'
+            ctx.body = {error: err.toString()}
+            ctx.app.emit('error', err, ctx)
+        }
+    }
 }

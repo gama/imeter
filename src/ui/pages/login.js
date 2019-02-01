@@ -1,27 +1,44 @@
 /* eslint-disable no-console */
 
-import React  from 'preact'
-import Layout from '../components/layout'
+import React       from 'preact'
+import { connect } from 'preact-redux'
+import Layout      from '../components/layout'
+import LoginForm   from '../components/login-form'
+import { login }   from '../state/actions'
 
 class LoginPage extends React.Component {
     static getInitialProps() {
         return {skipAuth: true}
     }
 
-    render() {
+    render({ dispatch }) {
         return (
-            <Layout>
+            <Container>
                 <h1 className="title">Login</h1>
-                <div className="panel">
-                    <label htmlFor="username">Username</label>
-                    <input name="username" />
-
-                    <label htmlFor="password">Password</label>
-                    <input name="password" />
-                </div>
-            </Layout>
+                <LoginForm onSubmit={(...args) => dispatch(login(...args))} />
+            </Container>
         )
     }
 }
 
-export default LoginPage
+function Container(props) {
+    return (
+        <Layout>
+            <div className="container" style={style.container}>
+                <div className="card">
+                    <div className="card-content">
+                        {props.children}
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    )
+}
+
+const style = {
+    container: {
+        'max-width': '30em'
+    }
+}
+
+export default connect()(LoginPage)

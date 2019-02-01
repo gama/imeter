@@ -17,7 +17,6 @@ const handle = app.getRequestHandler()
     Api.mount(server, '/api')
     Ui.mount(server, handle)
 
-    server.on('error', console.error)
     server.listen(port, () => {
         console.log(`> Ready on http://localhost:${port}`)
     })

@@ -1,6 +1,6 @@
 import React, { Component } from 'preact'
 import { connect }          from 'preact-redux'
-import { incrementCount, decrementCount, resetCount } from '../store'
+import { incrementCount, decrementCount, resetCount } from '../state/actions'
 
 class Counter extends Component {
     increment() {
