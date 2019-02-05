@@ -7,6 +7,7 @@
         "isomorphic-unfetch": "^3.0.0",
         "koa": "^2.6.2",
         "koa-body": "^4.0.7",
+        "koa-jwt": "^3.5.1",
         "koa-router": "^7.4.0",
         "nedb": "^1.8.0",
         "nedb-promise": "^2.0.1",
@@ -30,6 +31,7 @@
         "export": "NODE_ENV=production NODE_OPTIONS='-r ./src/with-preact' next export",
         "next": "NODE_ENV=production NODE_OPTIONS='-r ./src/with-preact' next src/ui",
         "lint": "eslint .",
+        "secret": "head -c 64 /dev/urandom | base64 -w0 > data/.secret",
         "postinstall": "yarn build"
     }
 }

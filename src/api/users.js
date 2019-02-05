@@ -1,13 +1,13 @@
-const { usersDb } = require('./db')
+const UsersDb = require('./models/user')
 
 async function index(ctx) {
-    const users = await usersDb.find({})
+    const users = await UsersDb.find({})
     console.log('users: ', users)
     ctx.body = {'users': users}
 }
 
 async function show(ctx) {
-    const user = await usersDb.findOne({_id: ctx.params.id})
+    const user = await UsersDb.findOne({_id: ctx.params.id})
     ctx.assert(user, 'user not found', 404)
     ctx.body = user
 }

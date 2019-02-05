@@ -1,5 +1,6 @@
 .next/
 dist/
 data/*.db
+data/.secret
 tmp/
 node_modules/

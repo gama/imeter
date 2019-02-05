@@ -1,8 +1,9 @@
 const { resolve } = require('path')
 const dataStore   = require('nedb-promise')
+const baseDir     = `${resolve(__dirname)}/../../data`
 
-const baseDir = `${resolve(__dirname)}/../../data`
-console.log('loading DB from: ', `${baseDir}/.users.db`)
-const usersDb = dataStore({filename: `${baseDir}/.users.db`, autoload: true})
+const loadDb = (name, opts = {}) => {
+    return dataStore({filename: `${baseDir}/.${name}.db`, autoload: true, ...opts})
+}
 
-module.exports = { usersDb }
+module.exports = {dataStore, baseDir, loadDb}

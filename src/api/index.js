@@ -2,6 +2,7 @@ const Router     = require('koa-router')
 const bodyParser = require('koa-body')
 const chokidar   = require('chokidar')
 const path       = require('path')
+const auth       = require('./auth')
 
 module.exports = {mount}
 
@@ -13,6 +14,8 @@ function mount(server, prefix = undefined) {
     if (initialMount) {
         server.use(jsonErrors())
         server.use(bodyParser())
+        server.use(auth.verifyJwt())
+        server.use(auth.userAuth())
         if (isDev)
             setupWatcher(() => mount(server, prefix))
     }
