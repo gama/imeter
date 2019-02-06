@@ -6,7 +6,7 @@ const auth       = require('./auth')
 
 module.exports = {mount}
 
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test'
 let routes, allowedMethods
 
 function mount(server, prefix = undefined) {
@@ -72,8 +72,9 @@ function jsonErrors() {
         try {
             await next()
         } catch (err) {
-            ctx.type = 'json'
-            ctx.body = {error: err.toString()}
+            ctx.type   = 'json'
+            ctx.status = err.status || 500
+            ctx.body   = {error: err.toString()}
             ctx.app.emit('error', err, ctx)
         }
     }

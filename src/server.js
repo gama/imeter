@@ -1,5 +1,5 @@
 require('@zeit/next-preact/alias')()
-const Koa = require('./koa-recomposable')
+const Koa = require('./lib/koa-recomposable')
 const Ui  = require('./ui')
 const Api = require('./api')
 

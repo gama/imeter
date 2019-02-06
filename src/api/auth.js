@@ -3,34 +3,31 @@ const fs          = require('fs')
 const { resolve } = require('path')
 const { sign }    = require('jsonwebtoken')
 const jwt         = require('koa-jwt')
-const UsersDb     = require('./models/user')
+const Users       = require('./models/users')
 
-module.exports = { mount, login, logout, verifyJwt, userAuth }
+module.exports = { mount, login, logout, verifyJwt, userAuth, generateToken }
 
-const NO_AUTH_ENDPOINTS = [
+const PUBLIC_ENDPOINTS = [
     ['POST', /^\/api\/auth/],    // login
     ['POST', /^\/api\/version/]  // version/heartbeat
 ]
 
 // ----- koa middleware -----
 function verifyJwt() {
-    return jwt({
-        secret: getSecret(),
-        key:    'jwt'
-    }).unless((ctx) => {
-        return NO_AUTH_ENDPOINTS.some(([method, path]) => {
+    const isPublic = (ctx) => {
+        return PUBLIC_ENDPOINTS.some(([method, path]) => {
             return method === ctx.req.method && path.test(ctx.req.url)
         })
-    })
+    }
+    return jwt({secret: getSecret(), key: 'jwt'}).unless(isPublic)
 }
 
 function userAuth() {
     return async (ctx, next) => {
         if (ctx.state.jwt) {
-            ctx.state.user = await UsersDb.findOne({token: ctx.state.jwt})
+            ctx.state.user = await Users.findOne({token: ctx.state.jwt})
             ctx.assert(ctx.state.user, `user bearing token "${ctx.state.jwt}" not found`, 404)
         }
-        // console.log('CTX.STATE: %o', ctx.state)
         return next()
     }
 }
@@ -46,12 +43,14 @@ function mount(router) {
 // ----- endpoints -----
 async function login(ctx) {
     const { username, password } = ctx.request.body
-    const user = await UsersDb.findOne({username})
+    ctx.assert(username && password, 'required params missing (username & password)', 400)
+
+    const user = await Users.findOne({username}, {})
     ctx.assert(user && user.password === password, 'invalid user or password', 401)
 
     const { rawToken, signedToken } = await generateToken()
     user.token = rawToken
-    UsersDb.save(user)
+    Users.save(user)
 
     ctx.body = { token: signedToken }
     console.log(`AUTH | user ${user.username} logged in`)
@@ -59,7 +58,7 @@ async function login(ctx) {
 
 async function logout(ctx) {
     delete ctx.state.user.token
-    UsersDb.save(ctx.state.user)
+    Users.save(ctx.state.user)
 
     ctx.status = 204
     ctx.body = ''

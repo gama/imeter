@@ -1,26 +1,26 @@
-const { resolve} = require('path')
-const baseDir    = resolve(__dirname)
-const dataStore  = require('nedb-promise')
+const DataStore = require('../src/lib/nedb-promise')
+const config    = require('../src/config')
 
-populate('users')
+module.exports = populate
 
-async function populate(name) {
-    const db = dataStore({filename: `${baseDir}/.${name}.db`, autoload: true})
-    const initialEntries = require(`./${name}.js`)
+async function populate(name, db=null, {verbose=true, autoload=true, ...opts}={}) {
+    db = db || new DataStore({
+        filename: `${config.dbBaseDir}/.${name}.db`,
+        autoload: autoload,
+        ...opts
+    })
 
-    try {
-        let entries = await db.find({})
-        if (entries.length)
-            printObj(`existing ${name}`, entries)
-        else {
-            entries = await db.insert(initialEntries)
-            printObj(`inserted ${name}`, entries)
-        }
-    } catch (error) {
-        console.log(error)
-    }
+    const initialEntries = require(`${config.dbBaseDir}/${name}.js`)
+    const entries = await db.insert(initialEntries)
+    if (verbose)
+        console.log('inserted %s: %o', name, entries)
+
+    return db
 }
 
-function printObj(msg, obj) {
-    console.log('%s: %o', msg, obj)
-}
+// ----- main -----
+if (require.main === module)
+    Promise.all([
+        populate('users'),
+        // populate('xyz'), ...
+    ]).catch((err) => { throw err })
