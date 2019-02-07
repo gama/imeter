@@ -8,8 +8,9 @@ const Users       = require('./models/users')
 module.exports = { mount, login, logout, verifyJwt, userAuth, generateToken }
 
 const PUBLIC_ENDPOINTS = [
-    ['POST', /^\/api\/auth/],    // login
-    ['GET',  /^\/api\/version/]  // version/heartbeat
+    ['POST', /^\/api\/auth/],     // login
+    ['GET',  /^\/api\/version/],  // version/heartbeat
+    ['GET',  /^\/(?!api\/)/]      // non-api requests
 ]
 
 // ----- koa middleware -----
