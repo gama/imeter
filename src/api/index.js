@@ -32,6 +32,7 @@ function createRouter(prefix) {
     const router = new Router({prefix: prefix})
     require('./auth').mount(router)
     require('./users').mount(router)
+    require('./version').mount(router)
     return router
 }
 

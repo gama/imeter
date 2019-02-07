@@ -9,7 +9,7 @@ module.exports = { mount, login, logout, verifyJwt, userAuth, generateToken }
 
 const PUBLIC_ENDPOINTS = [
     ['POST', /^\/api\/auth/],    // login
-    ['POST', /^\/api\/version/]  // version/heartbeat
+    ['GET',  /^\/api\/version/]  // version/heartbeat
 ]
 
 // ----- koa middleware -----
