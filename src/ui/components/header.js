@@ -1,41 +1,76 @@
 import React       from 'preact'
 import { connect } from 'preact-redux'
 import Link        from 'next/link'
+import { logout }  from '../state/actions'
+import style       from '../styles/header.sass'
 
-function Header(props) {
+class Header extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = { active: false }
+    }
+
+    activeClass() {
+        return this.state.active ? ' is-active' : ''
+    }
+
+    onBurgerClick() {
+        console.log('BURGER CLICK')
+        this.setState({ active: !this.state.active })
+    }
+
+    render(props) {
+        return (
+            <header className={style.header}>
+                <nav className="navbar has-shadow is-spaced" role="navigation" aria-label="main navigation">
+                    <div className="navbar-brand">
+                        <Link href="/">
+                            <a className="navbar-item">
+                                <img src="/static/ivision.png" className={style.logo} />
+                            </a>
+                        </Link>
+                        <span className="navbar-item">
+                            <h2 className={style.title}>iMETER<span className={style.subtitle}>Management Interface</span></h2>
+                        </span>
+                        {props.authToken && <NavbarBurger activeClass={this.activeClass()} onClick={this.onBurgerClick.bind(this)} />}
+                    </div>
+                    {props.authToken && <NavbarMenu activeClass={this.activeClass()} logout={props.logout} />}
+                </nav>
+            </header>)
+    }
+}
+
+function NavbarBurger({ activeClass, onClick }) {
     return (
-        <section className="section header">
-            <nav className="navbar" role="navigation" aria-label="main navigation">
-                <div className="navbar-brand">
-                    <Link href="/">
-                        <a className="navbar-item">
-                            <img className="logo" src="/static/kiom-small.png"></img>
-                        </a>
-                    </Link>
-                    <span className="navbar-item">Welcome to next.js (v3)!</span>
-                </div>
-                <div className="navbar-end">
-                    {(props.authToken ? loggedInLinks() : '')}
-                </div>
-            </nav>
-        </section>
+        <a role="button" className={'navbar-burger' + activeClass} onClick={onClick} aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
     )
 }
 
-const loggedInLinks = () => {
+function NavbarMenu({ activeClass, logout }) {
+    const logoutClicked = (logout) => (event) => {
+        event.preventDefault()
+        logout()
+    }
+
     return (
-        <span>
-            <Link href="/clock"><a className="navbar-item">Clock</a></Link>
-            <Link href="/counter"><a className="navbar-item">Counter</a></Link>
-            <Link href="/tv-shows"><a className="navbar-item">Tv Shows</a></Link>
-            <Link href="/about"><a className="navbar-item">About</a></Link>
-            <Link href="/logout"><a className="navbar-item">Logout</a></Link>
-        </span>
+        <div id="menu" className={'navbar-menu' + activeClass}>
+            <div className="navbar-end">
+                {/*<Link href="/clock"><a className={style.navbaritem + ' navbar-item'}>Clock</a></Link>*/}
+                {/*<Link href="/counter"><a className={style.navbaritem + ' navbar-item'}>Counter</a></Link>*/}
+                {/*<Link href="/tv-shows"><a className={style.navbaritem + ' navbar-item'}>Tv Shows</a></Link>*/}
+                {/*<Link href="/about"><a className={style.navbaritem + ' navbar-item'}>About</a></Link>*/}
+                <Link href="/meters" ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-tachometer" />Meters</a></Link>
+                <Link href="/reports"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-bar-chart" />Reports</a></Link>
+                <Link href="/logout" ><a className={style.navbaritem + ' navbar-item'} onClick={logoutClicked(logout)}><i className="fa fa-sign-out" /> Logout</a></Link>
+            </div>
+        </div>
     )
 }
 
-const mapStateToProps = (state) => {
-    return { authToken: state.authToken }
-}
-
-export default connect(mapStateToProps)(Header)
+const mapStateToProps = ({ authToken }) => ({ authToken })
+const actions = { logout }
+export default connect(mapStateToProps, actions)(Header)

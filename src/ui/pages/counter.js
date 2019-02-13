@@ -1,14 +1,18 @@
 import React       from 'preact'
+import { connect } from 'preact-redux'
 import Layout      from '../components/layout'
 import Counter     from '../components/counter'
-import withAuth    from '../lib/with-auth.js'
+import { incrementCount, decrementCount, resetCount } from '../state/actions'
 
-function CounterPage() {
+function CounterPage(props) {
     return (
         <Layout>
-            <Counter />
+            <Counter {...props} />
         </Layout>
     )
 }
 
-export default withAuth(CounterPage)
+const mapStateToProps = (state) => { return { count: state.count } }
+const actions = { incrementCount, decrementCount, resetCount }
+
+export default connect(mapStateToProps, actions)(CounterPage)

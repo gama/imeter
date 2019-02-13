@@ -28,9 +28,8 @@ export default function withReduxStore(App) {
             appContext.ctx.reduxStore = reduxStore
 
             let appProps = {}
-            if (typeof App.getInitialProps === 'function') {
+            if (typeof App.getInitialProps === 'function')
                 appProps = await App.getInitialProps(appContext)
-            }
 
             return {...appProps, initialReduxState: reduxStore.getState()}
         }

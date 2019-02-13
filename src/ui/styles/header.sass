@@ -1,0 +1,21 @@
+@import './variables.global.sass'
+
+.logo
+  max-height: $size-1 !important
+
+.title
+  font-weight: bold
+  font-size: $size-medium
+
+.subtitle
+  font-weight: normal
+  text-transform: uppercase
+  &:before
+    content: '  |  '
+    white-space: pre
+    color: $grey-lighter
+
+.navbaritem
+  text-align: right
+  i
+    margin-right: .3rem

@@ -20,13 +20,13 @@ function verifyJwt() {
             return method === ctx.req.method && path.test(ctx.req.url)
         })
     }
-    return jwt({secret: getSecret(), key: 'jwt'}).unless(isPublic)
+    return jwt({secret: getSecret(), key: 'jwt', cookie: 'authToken'}).unless(isPublic)
 }
 
 function userAuth() {
     return async (ctx, next) => {
         if (ctx.state.jwt) {
-            ctx.state.user = await Users.findOne({token: ctx.state.jwt})
+            ctx.state.user = await Users.findOne({token: ctx.state.jwt}, {})
             ctx.assert(ctx.state.user, `user bearing token "${ctx.state.jwt}" not found`, 404)
         }
         return next()

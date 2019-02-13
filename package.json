@@ -1,21 +1,21 @@
 {
-	"name": "nextjs-playground",
-	"version": "0.0.1",
-	"author": {
-		"name":  "Gustavo Gama",
-		"email": "louis.chatriot@gmail.com"
-	},
-	"description": "Sample application, with small proof-of-concepts of ideas I wanted to experiment with while learning a few new javascript tools.",
-	"keywords": [
-		"nextjs",
-		"koa",
-		"nedb"
-	],
-	"homepage": "https://github.com/gama/nextjs-playground",
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:gama/nextjs-playground.git"
-	},
+    "name": "nextjs-playground",
+    "version": "0.0.1",
+    "author": {
+        "name": "Gustavo Gama",
+        "email": "louis.chatriot@gmail.com"
+    },
+    "description": "Sample application, with small proof-of-concepts of ideas I wanted to experiment with while learning a few new javascript tools.",
+    "keywords": [
+        "nextjs",
+        "koa",
+        "nedb"
+    ],
+    "homepage": "https://github.com/gama/nextjs-playground",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:gama/nextjs-playground.git"
+    },
     "engines": {
         "node": "^10.15.0",
         "npm": "^6.4.0",
@@ -34,6 +34,7 @@
         "nedb": "^1.8.0",
         "nedb-promise": "^2.0.1",
         "next": "^7.0.2",
+        "next-cookies": "^1.1.0",
         "node-sass": "^4.11.0",
         "preact": "^8.4.2",
         "preact-compat": "^3.18.4",
@@ -47,10 +48,10 @@
     },
     "scripts": {
         "dev": "node src/server.js",
-        "build": "NODE_ENV=production NODE_OPTIONS='-r ./src/with-preact' next build src/ui",
-        "start": "NODE_ENV=production NODE_OPTIONS='-r ./src/with-preact' node src/server.js",
-        "export": "NODE_ENV=production NODE_OPTIONS='-r ./src/with-preact' next export",
-        "next": "NODE_ENV=production NODE_OPTIONS='-r ./src/with-preact' next src/ui",
+        "build": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next build src/ui",
+        "start": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' node src/server.js",
+        "export": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next export",
+        "next": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next src/ui",
         "lint": "eslint .",
         "secret": "head -c 64 /dev/urandom | base64 -w0 > data/.secret",
         "test": "jest",

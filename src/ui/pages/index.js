@@ -47,7 +47,3 @@ class Index extends Component {
 }
 
 export default connect()(Index)
-
-
-
-

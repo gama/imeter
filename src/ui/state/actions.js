@@ -1,5 +1,6 @@
 import Router from 'next/router'
 import fetch  from 'isomorphic-unfetch'
+import cookie from 'component-cookie'
 
 export const actionTypes = {
     TICK:        'TICK',
@@ -41,12 +42,14 @@ export const login = (username, password, rememberMe, nextUrl) => async dispatch
         const response = await fetchWithPost('/api/auth', { username, password, 'remember-me': rememberMe })
         const data     = await response.json()
         if (!response.ok)
-            throw data
+            return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
+
         dispatch({ type: actionTypes.LOGIN, ...data })
+        cookie('authToken', data.token, { expires: dateNDaysInTheFuture(30) })
         Router.push(nextUrl || '/')
     } catch (error) {
         console.error('fetch failed: ', error)
-        dispatch({ type: actionTypes.FETCH_ERROR, message: error })
+        dispatch({ type: actionTypes.FETCH_ERROR, error: error })
     }
 }
 
@@ -54,11 +57,14 @@ export const logout = () => async dispatch => {
     try {
         dispatch({ type: actionTypes.FETCHING })
         const response = await fetchWithDelete('/api/auth')
-        const data     = await response.json()
-        if (!response.ok)
-            throw data
-        dispatch({ type: actionTypes.LOGOUT, ...data })
-        Router.push('/')
+        if (!response.ok) {
+            const data = await response.json()
+            return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
+        }
+
+        dispatch({ type: actionTypes.LOGOUT })
+        cookie('authToken', null)
+        Router.push('/login')
     } catch (error) {
         console.error('fetch failed: ', error)
         dispatch({ type: actionTypes.FETCH_ERROR, error: error })
@@ -78,4 +84,8 @@ const fetchWithDelete = async (url) => {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'},
     })
+}
+
+const dateNDaysInTheFuture = (numDays) => {
+    return new Date((new Date()).getTime() + (numDays * 24 * 60 * 60))
 }

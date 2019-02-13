@@ -11,11 +11,11 @@ class LoginPage extends React.Component {
         return {skipAuth: true}
     }
 
-    render({ dispatch }) {
+    render(props) {
         return (
             <Container>
                 <h1 className="title">Login</h1>
-                <LoginForm onSubmit={(...args) => dispatch(login(...args))} />
+                <LoginForm onSubmit={(...args) => props.login(...args)} error={props.error} />
             </Container>
         )
     }
@@ -41,4 +41,7 @@ const style = {
     }
 }
 
-export default connect()(LoginPage)
+const mapStateToProps = (state) => ({ error: state.error })
+const actions = { login }
+
+export default connect(mapStateToProps, actions)(LoginPage)
