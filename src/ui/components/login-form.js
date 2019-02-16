@@ -4,7 +4,7 @@ import style from '../styles/login-form.sass'
 export default class LoginForm extends React.Component {
     constructor(props) {
         super(props)
-        this.username   = React.createRef()
+        this.email      = React.createRef()
         this.password   = React.createRef()
         this.rememberMe = React.createRef()
     }
@@ -17,7 +17,7 @@ export default class LoginForm extends React.Component {
     onSubmit(event) {
         event.preventDefault()
         this.props.onSubmit(
-            this.username.current.value,
+            this.email.current.value,
             this.password.current.value,
             this.rememberMe.current.checked
         )
@@ -26,7 +26,7 @@ export default class LoginForm extends React.Component {
     render(props) {
         return (
             <form onSubmit={this.onSubmit.bind(this)}>
-                <UsernameInput refp={this.username} />
+                <EmailInput refp={this.email} />
                 <PasswordInput refp={this.password} />
                 <div className={style.columns}>
                     <RememberMeCheckbox refp={this.rememberMe} />
@@ -38,12 +38,12 @@ export default class LoginForm extends React.Component {
     }
 }
 
-function UsernameInput(props) {
+function EmailInput(props) {
     return (
         <div className="field">
-            <label htmlFor="username" className="label">Username</label>
+            <label htmlFor="email" className="label">Email</label>
             <div className="control has-icons-left">
-                <input name="username" type="input" className="input" ref={props.refp} />
+                <input name="email" type="input" className="input" ref={props.refp} />
                 <span className="icon is-small is-left">
                     <i className="fa fa-user"></i>
                 </span>

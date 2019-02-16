@@ -1,0 +1,8 @@
+[
+    {"id": 20, "email": "admin@thecompany.com", "password": "1234",  "firstName": "Admin", "lastName": "",        "role": "admin"   , "customer_id": null},
+    {"id": 21, "email": "jdoe@somewhere.com",   "password": "john",  "firstName": "John",  "lastName": "Doe",     "role": "operator", "customer_id": null},
+    {"id": 22, "email": "ann@somewhere.com",    "password": "ann",   "firstName": "Ann",   "lastName": "Smith",   "role": "operator", "customer_id": null},
+    {"id": 23, "email": "mary@elsewhere.net",   "password": "mary",  "firstName": "Mary",  "lastName": "Taylor",  "role": "customer", "customer_id": 10},
+    {"id": 24, "email": "peter@elsewhere.net",  "password": "peter", "firstName": "Peter", "lastName": "Mills",   "role": "customer", "customer_id": 10},
+    {"id": 25, "email": "emily@nowhere.org",    "password": "emily", "firstName": "Emily", "lastName": "Johnson", "role": "customer", "customer_id": 11}
+]

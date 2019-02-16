@@ -1,9 +1,9 @@
-const uuid        = require('uuid')
-const fs          = require('fs')
-const { resolve } = require('path')
-const { sign }    = require('jsonwebtoken')
-const jwt         = require('koa-jwt')
-const Users       = require('./models/users')
+const uuid              = require('uuid')
+const fs                = require('fs')
+const { resolve }       = require('path')
+const { sign }          = require('jsonwebtoken')
+const jwt               = require('koa-jwt')
+const { getRepository } = require('typeorm')
 
 module.exports = { mount, login, logout, verifyJwt, userAuth, generateToken }
 
@@ -26,8 +26,9 @@ function verifyJwt() {
 function userAuth() {
     return async (ctx, next) => {
         if (ctx.state.jwt) {
-            ctx.state.user = await Users.findOne({token: ctx.state.jwt}, {})
-            ctx.assert(ctx.state.user, `user bearing token "${ctx.state.jwt}" not found`, 404)
+            const User = getRepository('User')
+            ctx.state.user = await User.findOne({ authToken: ctx.state.jwt })
+            ctx.assert(ctx.state.user, 401, 'invalid or expired auth token')
         }
         return next()
     }
@@ -43,27 +44,29 @@ function mount(router) {
 
 // ----- endpoints -----
 async function login(ctx) {
-    const { username, password } = ctx.request.body
-    ctx.assert(username && password, 'required params missing (username & password)', 400)
+    const Users = getRepository('User')
 
-    const user = await Users.findOne({username}, {})
-    ctx.assert(user && user.password === password, 'invalid user or password', 401)
+    const { email, password } = ctx.request.body
+    ctx.assert(email && password, 400, 'required params missing (email & password)')
+
+    const user = await Users.findOne({email}, {})
+    ctx.assert(user && user.password === password, 401, 'invalid user or password')
 
     const { rawToken, signedToken } = await generateToken()
-    user.token = rawToken
-    Users.save(user)
+    await Users.update(user, {authToken: rawToken})
 
     ctx.body = { token: signedToken }
-    console.log(`AUTH | user ${user.username} logged in`)
+    console.log(`AUTH | user ${user.email} logged in`)
 }
 
 async function logout(ctx) {
-    delete ctx.state.user.token
-    Users.save(ctx.state.user)
+    const Users = getRepository('User')
+
+    await Users.update(ctx.state.user, {authToken: null})
 
     ctx.status = 204
     ctx.body = ''
-    console.log(`AUTH | user ${ctx.state.user.username} logged out`)
+    console.log(`AUTH | user ${ctx.state.user.email} logged out`)
 }
 
 

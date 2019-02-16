@@ -36,10 +36,10 @@ export const resetCount = () => dispatch => {
     return dispatch({ type: actionTypes.RESET })
 }
 
-export const login = (username, password, rememberMe, nextUrl) => async dispatch => {
+export const login = (email, password, rememberMe, nextUrl) => async dispatch => {
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await fetchWithPost('/api/auth', { username, password, 'remember-me': rememberMe })
+        const response = await fetchWithPost('/api/auth', { email, password, 'remember-me': rememberMe })
         const data     = await response.json()
         if (!response.ok)
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})

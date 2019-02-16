@@ -2,6 +2,7 @@ require('@zeit/next-preact/alias')()
 const Koa = require('./lib/koa-recomposable')
 const Ui  = require('./ui')
 const Api = require('./api')
+const db  = require('./api/db')
 
 const port   = parseInt(process.env.PORT, 10) || 3000
 const next   = require('next')
@@ -12,6 +13,7 @@ const handle = app.getRequestHandler()
 
 ;(async function () {
     await app.prepare()
+    await db.ensureConnection()
 
     const server = new Koa()
     Api.mount(server, '/api')

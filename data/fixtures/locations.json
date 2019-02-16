@@ -1,0 +1,12 @@
+[
+  {"id": 30, "customer_id": 10,  "name": "Casa 1"},
+  {"id": 31, "customer_id": 10,  "name": "Casa 2"},
+  {"id": 32, "customer_id": 10,  "name": "Casa 3"},
+  {"id": 33, "customer_id": 10,  "name": "Casa 4"},
+  {"id": 34, "customer_id": 11,  "name": "Apartamento 101"},
+  {"id": 35, "customer_id": 11,  "name": "Apartamento 102"},
+  {"id": 36, "customer_id": 11,  "name": "Apartamento 201"},
+  {"id": 37, "customer_id": 11,  "name": "Apartamento 202"},
+  {"id": 38, "customer_id": 11,  "name": "Apartamento 301"},
+  {"id": 39, "customer_id": 11,  "name": "Apartamento 302"}
+]

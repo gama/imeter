@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "author": {
         "name": "Gustavo Gama",
-        "email": "louis.chatriot@gmail.com"
+        "email": "gustavo.gama@gmail.com"
     },
     "description": "Sample application, with small proof-of-concepts of ideas I wanted to experiment with while learning a few new javascript tools.",
     "keywords": [
@@ -21,6 +21,10 @@
         "npm": "^6.4.0",
         "yarn": "^1.12.0"
     },
+    "jest": {
+        "globalSetup":    "./test/api/global-setup.js",
+        "globalTeardown": "./test/api/global-teardown.js"
+    },
     "dependencies": {
         "@zeit/next-preact": "^0.1.0",
         "@zeit/next-sass": "^1.0.1",
@@ -36,25 +40,30 @@
         "next": "^7.0.2",
         "next-cookies": "^1.1.0",
         "node-sass": "^4.11.0",
+        "pg": "^7.8.0",
         "preact": "^8.4.2",
         "preact-compat": "^3.18.4",
         "preact-redux": "^2.0.3",
         "redux": "^4.0.1",
-        "redux-thunk": "^2.3.0"
+        "redux-thunk": "^2.3.0",
+        "reflect-metadata": "^0.1.13",
+        "typeorm": "^0.2.13",
+        "v8n": "^1.2.3"
     },
     "devDependencies": {
         "jest": "^24.0.0",
         "supertest": "^3.4.2"
     },
     "scripts": {
-        "dev": "node src/server.js",
-        "build": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next build src/ui",
-        "start": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' node src/server.js",
-        "export": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next export",
-        "next": "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next src/ui",
-        "lint": "eslint .",
-        "secret": "head -c 64 /dev/urandom | base64 -w0 > data/.secret",
-        "test": "jest",
+        "dev":         "node src/server.js",
+        "build":       "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next build src/ui",
+        "start":       "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' node src/server.js",
+        "export":      "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next export",
+        "next":        "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next src/ui",
+        "lint":        "eslint .",
+        "typeorm":     "ts-node node_modules/.bin/typeorm",
+        "secret":      "head -c 64 /dev/urandom | base64 -w0 > data/.secret",
+        "test":        "jest --runInBand --verbose",
         "postinstall": "yarn build"
     }
 }

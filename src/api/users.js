@@ -1,50 +1,6 @@
-const Users = require('./models/users')
+const { getRepository } = require('typeorm')
 
-async function index(ctx) {
-    const users = await Users.find({})
-    ctx.body = {users}
-}
-
-async function show(ctx) {
-    const user = await Users.findOne({_id: ctx.params.id})
-    ctx.assert(user, 'user not found', 404)
-    ctx.body = {user}
-}
-
-async function create(ctx) {
-    const attrs = ctx.request.body
-    ctx.assert(attrs && Users.validateAttrs(attrs.user), 'invalid user attributes', 400)
-
-    const user = await Users.insert(attrs.user)
-    ctx.assert(user, 'unable to create user', 500)
-
-    ctx.status = 201
-    ctx.body = {user}
-}
-
-async function update(ctx) {
-    let user = await Users.findOne({_id: ctx.params.id})
-    ctx.assert(user, 'user not found', 404)
-
-    const attrs = ctx.request.body
-    ctx.assert(attrs && Users.validateAttrs(attrs.user), 'invalid user attributes', 400)
-
-    user = await Users.update(user, attrs.user)
-    ctx.assert(user, 'unable to update user', 500)
-
-    ctx.status = 204
-    ctx.body = ''
-}
-
-async function destroy(ctx) {
-    let user = await Users.findOne({_id: ctx.params.id})
-    ctx.assert(user, 'user not found', 404)
-
-    await Users.remove({_id: user._id})
-
-    ctx.status = 204
-    ctx.body = ''
-}
+module.exports = { mount, index, show, create, update, destroy }
 
 function mount(router) {
     router.get    ('/users',     index)
@@ -54,4 +10,55 @@ function mount(router) {
     router.delete ('/users/:id', destroy)
 }
 
-module.exports = { mount, index, show, create, update, destroy }
+// ---------- endpoints ----------
+async function index(ctx) {
+    const users = await Users().find({})
+    ctx.body = {users: users.map(serialize)}
+}
+
+async function show(ctx) {
+    const user = await Users().findOne(ctx.params.id)
+    ctx.assert(user, 404, 'user not found')
+    ctx.body = {user: serialize(user)}
+}
+
+async function create(ctx) {
+    const attrs = ctx.request.body.user
+    ctx.assert(Users().target.validate(attrs), 400, 'invalid user attributes')
+    const user = await Users().save(Users().create(attrs))
+
+    ctx.status = 201
+    ctx.body   = {user: serialize(user)}
+}
+
+async function update(ctx) {
+    let user = await Users().findOne(ctx.params.id)
+    ctx.assert(user, 404, 'user not found')
+
+    const attrs = ctx.request.body.user
+    ctx.assert(Users().target.validate(attrs), 400, 'invalid user attributes')
+    await Users().update(user.id, attrs)
+
+    ctx.status = 204
+    ctx.body   = null
+}
+
+async function destroy(ctx) {
+    let user = await Users().findOne(ctx.params.id)
+    ctx.assert(user, 404, 'user not found')
+
+    await Users().delete(user.id)
+
+    ctx.status = 204
+    ctx.body   = null
+}
+
+// ---------- private functions and helpers ----------
+function Users() {
+    return getRepository('User')
+}
+
+function serialize(user) {
+    const { password, ...attrs } = user  // eslint-disable-line no-unused-vars
+    return attrs
+}
