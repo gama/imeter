@@ -6,10 +6,11 @@ module.exports = new EntitySchema({
     name:      'Meter',
     tableName: 'meters',
     columns:   {
-        id:           { primary: true, type: 'int', generated: true },
-        serialNumber: { type: 'varchar' },
-        kind:         { type: 'varchar' },
-        model:        { type: 'varchar' }
+        id:            { type: 'int', primary: true, generated: true },
+        location_id:   { type: 'int' },
+        serial_number: { type: 'varchar' },
+        kind:          { type: 'varchar' },
+        model:         { type: 'varchar' }
     },
     relations: {
         location: {

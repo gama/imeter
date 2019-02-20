@@ -8,6 +8,7 @@ async function initDatabase() {
 
 module.exports = async () => {
     process.env.NODE_ENV = 'test'
+    process.env.TYPEORM_DATABASE = 'imeter_test'
     await initDatabase()
     await loadAllFixtures()
 }

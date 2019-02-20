@@ -6,9 +6,11 @@ module.exports = new EntitySchema({
     name:      'Measurement',
     tableName: 'measurements',
     columns:   {
-        id:        { primary: true, type: 'int', generated: true },
-        timestamp: { type: 'timestamp'                           },
-        value:     { type: 'real'                                }
+        id:          { type: 'int', primary: true, generated: true },
+        meter_id:    { type: 'int'                                 },
+        operator_id: { type: 'int'                                 },
+        timestamp:   { type: 'timestamp'                           },
+        value:       { type: 'real'                                }
     },
     relations: {
         meter: {

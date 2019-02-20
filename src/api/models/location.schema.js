@@ -6,8 +6,9 @@ module.exports = new EntitySchema({
     name:      'Location',
     tableName: 'locations',
     columns:   {
-        id:   { primary: true, type: 'int', generated: true },
-        name: { type: 'varchar' }
+        id:          { type: 'int', primary: true, generated: true },
+        customer_id: { type: 'int' },
+        name:        { type: 'varchar' }
     },
     relations: {
         customer: {

@@ -16,8 +16,8 @@ function mount(server, prefix = undefined) {
         server.use(bodyParser())
         server.use(auth.verifyJwt())
         server.use(auth.userAuth())
-        if (isDev)
-            setupWatcher(() => mount(server, prefix))
+        // if (isDev)
+        //     setupWatcher(() => mount(server, prefix))
     }
 
     const router     = createRouter(prefix)
