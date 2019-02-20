@@ -1,12 +1,12 @@
 [
-  {"id": 30, "customer_id": 10,  "name": "Casa 1"},
-  {"id": 31, "customer_id": 10,  "name": "Casa 2"},
-  {"id": 32, "customer_id": 10,  "name": "Casa 3"},
-  {"id": 33, "customer_id": 10,  "name": "Casa 4"},
-  {"id": 34, "customer_id": 11,  "name": "Apartamento 101"},
-  {"id": 35, "customer_id": 11,  "name": "Apartamento 102"},
-  {"id": 36, "customer_id": 11,  "name": "Apartamento 201"},
-  {"id": 37, "customer_id": 11,  "name": "Apartamento 202"},
-  {"id": 38, "customer_id": 11,  "name": "Apartamento 301"},
-  {"id": 39, "customer_id": 11,  "name": "Apartamento 302"}
+  {"id": 30, "customerId": 10,  "name": "TownHouse 1"},
+  {"id": 31, "customerId": 10,  "name": "TownHouse 2"},
+  {"id": 32, "customerId": 10,  "name": "TownHouse 3"},
+  {"id": 33, "customerId": 10,  "name": "TownHouse 4"},
+  {"id": 34, "customerId": 11,  "name": "Apartment 101"},
+  {"id": 35, "customerId": 11,  "name": "Apartment 102"},
+  {"id": 36, "customerId": 11,  "name": "Apartment 201"},
+  {"id": 37, "customerId": 11,  "name": "Apartment 202"},
+  {"id": 38, "customerId": 11,  "name": "Apartment 301"},
+  {"id": 39, "customerId": 11,  "name": "Apartment 302"}
 ]

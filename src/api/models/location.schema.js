@@ -6,18 +6,20 @@ module.exports = new EntitySchema({
     name:      'Location',
     tableName: 'locations',
     columns:   {
-        id:   { primary: true, type: 'int', generated: true },
-        name: { type: 'varchar' }
+        id:         { type: 'int', primary: true, generated: true },
+        customerId: { type: 'int', name: 'customer_id'            },
+        name:       { type: 'varchar'                             }
     },
     relations: {
         customer: {
-            target:  'Customer',
-            type:    'belongs-to'
+            target:   'Customer',
+            type:     'many-to-one',
+            onDelete: 'CASCADE',
+            joinColumn: { name: 'customer_id' },
         },
         meters: {
-            target:  'Meter',
-            type:    'one-to-many',
-            cascade: true
+            target:   'Meter',
+            type:     'one-to-many'
         }
     }
 })

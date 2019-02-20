@@ -1,13 +1,20 @@
+const Router            = require('koa-router')
 const { getRepository } = require('typeorm')
+const { isAdmin }       = require('../auth')
 
 module.exports = { mount, index, show, create, update, destroy }
 
-function mount(router) {
-    router.get    ('/users',     index)
-    router.post   ('/users',     create)
-    router.get    ('/users/:id', show)
-    router.put    ('/users/:id', update)
-    router.delete ('/users/:id', destroy)
+function mount(parentRouter, prefix = '/users') {
+    const router = new Router({ prefix })
+    router.use(isAdmin())
+
+    router.get    ('/',    index)
+    router.post   ('/',    create)
+    router.get    ('/:id', show)
+    router.put    ('/:id', update)
+    router.delete ('/:id', destroy)
+
+    parentRouter.use(router.routes())
 }
 
 // ---------- endpoints ----------

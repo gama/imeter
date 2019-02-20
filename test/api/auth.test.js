@@ -5,10 +5,16 @@ const { resolve } = require('path')
 const { sign }    = require('jsonwebtoken')
 const request     = require('supertest')
 const db          = require('../../src/api/db')
+const mocks       = require('./mocks')
 
-require('./mocks').defaults()
+mocks.mock('config')
 const app    = require('./server')
 const server = app.callback()
+
+let user, Users
+beforeEach(async () => user = await Users.findOne({firstName: 'Admin'}, {}) )
+beforeAll(async ()  => Users = await db.getRepository('User'))
+afterAll(async ()   => db.closeConnection())
 
 test('login succeeds', async () => {
     expect((await protectedRequest(server, 'invalid-token')).status).toEqual(401)
@@ -67,12 +73,7 @@ test('logout fails due to authentication', async () => {
 })
 
 
-// ----- fixtures, helpers, setup & teardown -----
-let user, Users
-beforeEach(async () => user = await Users.findOne({firstName: 'John'}, {}) )
-beforeAll(async ()  => Users = await db.getRepository('User'))
-afterAll(async ()   => db.closeConnection())
-
+// ----- helpers -----
 const signAsync = (payload) => {
     const secret = fs.readFileSync(`${resolve(__dirname)}/../../data/.secret`)
     return new Promise((resolve, reject) => {

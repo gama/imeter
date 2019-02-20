@@ -6,13 +6,13 @@ class CreateUsers1550265586267 {
             name: 'users',
             columns: [
                 { name: 'id',          type: 'int',       isPrimary: true,    isGenerated: true },
+                { name: 'customer_id', type: 'int',       isNullable: true                      },
                 { name: 'email',       type: 'varchar'                                          },
                 { name: 'password',    type: 'varchar'                                          },
-                { name: 'firstName',   type: 'varchar'                                          },
-                { name: 'lastName',    type: 'varchar'                                          },
+                { name: 'first_name',  type: 'varchar'                                          },
+                { name: 'last_name',   type: 'varchar'                                          },
                 { name: 'role',        type: 'varchar'                                          },
-                { name: 'authToken',   type: 'varchar',   isNullable: true                      },
-                { name: 'customer_id', type: 'int',       isNullable: true                      },
+                { name: 'auth_token',  type: 'varchar',   isNullable: true                      },
             ],
             foreignKeys: [
                 { columnNames: ['customer_id'], referencedTableName: 'customers', referencedColumnNames: ['id'] }

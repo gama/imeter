@@ -9,31 +9,34 @@ module.exports = {mount}
 const isDev = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test'
 let routes, allowedMethods
 
-function mount(server, prefix = undefined) {
+function mount(app, prefix = undefined) {
     const initialMount = (!routes && !allowedMethods)
     if (initialMount) {
-        server.use(jsonErrors())
-        server.use(bodyParser())
-        server.use(auth.verifyJwt())
-        server.use(auth.userAuth())
+        app.use(jsonErrors())
+        app.use(bodyParser())
+        app.use(auth.verifyJwt())
+        app.use(auth.userAuth())
         if (isDev)
-            setupWatcher(() => mount(server, prefix))
+            setupWatcher(() => mount(app, prefix))
     }
 
-    const router     = createRouter(prefix)
-    routes           = useMiddleware(server, router.routes(), routes)
-    allowedMethods   = useMiddleware(server, router.allowedMethods(), allowedMethods)
+    const router   = createRouter(prefix)
+    routes         = useMiddleware(app, router.routes(), routes)
+    allowedMethods = useMiddleware(app, router.allowedMethods(), allowedMethods)
 
     if (isDev && !initialMount)
-        server.recompose()
+        app.recompose()
 }
 
 function createRouter(prefix) {
     const router = new Router({prefix: prefix})
-    require('./auth').mount(router)
-    require('./users').mount(router)
-    require('./customers').mount(router)
-    require('./version').mount(router)
+    require('./controllers/auth').mount(router)
+    require('./controllers/customers').mount(router)
+    require('./controllers/users').mount(router)
+    require('./controllers/locations').mount(router)
+    require('./controllers/meters').mount(router)
+    require('./controllers/measurements').mount(router)
+    require('./controllers/version').mount(router)
     return router
 }
 

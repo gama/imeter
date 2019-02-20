@@ -1,4 +1,4 @@
-const { name, version, description } = require('../../package.json')
+const { name, version, description } = require('../../../package.json')
 
 async function show(ctx) {
     ctx.body = { name, version, description }

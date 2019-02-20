@@ -1,11 +1,11 @@
 {
-    "name": "nextjs-playground",
+    "name": "ivmeter",
     "version": "0.0.1",
     "author": {
         "name": "Gustavo Gama",
         "email": "gustavo.gama@gmail.com"
     },
-    "description": "Sample application, with small proof-of-concepts of ideas I wanted to experiment with while learning a few new javascript tools.",
+    "description": "Invent Vision's Meter Web Application.",
     "keywords": [
         "nextjs",
         "koa",
@@ -22,8 +22,9 @@
         "yarn": "^1.12.0"
     },
     "jest": {
-        "globalSetup":    "./test/api/global-setup.js",
-        "globalTeardown": "./test/api/global-teardown.js"
+        "testEnvironment": "node",
+        "globalSetup":     "./test/api/global-setup.js",
+        "globalTeardown":  "./test/api/global-teardown.js"
     },
     "dependencies": {
         "@zeit/next-preact": "^0.1.0",
@@ -64,6 +65,7 @@
         "typeorm":     "ts-node node_modules/.bin/typeorm",
         "secret":      "head -c 64 /dev/urandom | base64 -w0 > data/.secret",
         "test":        "jest --runInBand --verbose",
+        "test:watch":  "jest --runInBand --verbose --watch",
         "postinstall": "yarn build"
     }
 }
