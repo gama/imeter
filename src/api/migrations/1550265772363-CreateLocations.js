@@ -6,8 +6,8 @@ class CreateLocations1550265772363 {
             name: 'locations',
             columns: [
                 { name: 'id',          type: 'int',     isPrimary: true, isGenerated: true },
-                { name: 'name',        type: 'varchar'                                     },
-                { name: 'customer_id', type: 'int'                                         }
+                { name: 'customer_id', type: 'int'                                         },
+                { name: 'name',        type: 'varchar'                                     }
             ], 
             foreignKeys: [
                 { columnNames: ['customer_id'], referencedTableName: 'customers', referencedColumnNames: ['id'] }

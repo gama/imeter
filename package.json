@@ -22,8 +22,9 @@
         "yarn": "^1.12.0"
     },
     "jest": {
-        "globalSetup":    "./test/api/global-setup.js",
-        "globalTeardown": "./test/api/global-teardown.js"
+        "testEnvironment": "node",
+        "globalSetup":     "./test/api/global-setup.js",
+        "globalTeardown":  "./test/api/global-teardown.js"
     },
     "dependencies": {
         "@zeit/next-preact": "^0.1.0",

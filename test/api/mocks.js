@@ -9,38 +9,20 @@ function config() {
     })
 }
 
-// function baseModel() {
-//     jest.doMock('../../src/api/models/base', () => {
-//         const populate  = require('../../data/populate')
-//         const BaseModel = jest.requireActual('../../src/api/models/base')
-
-//         class MockBaseModel extends BaseModel {
-//             constructor(name, opts={}) {
-//                 super(name, {...opts, inMemoryOnly: true, autoload: false})
-//                 this._name = name
-//                 this.reset()
-//             }
-
-//             reset() {
-//                 this.remove({}, {multi: true})
-//                 populate(this._name, this, {verbose: false}).catch((err) => { throw err })
-//             }
-//         }
-
-//         return MockBaseModel
-//     })
-// }
-
-function authMiddleware(username='admin') {
+function authMiddleware(userName='Admin') {
     jest.doMock('../../src/api/auth', () => {
         const { getRepository } = require('typeorm')
         return {
             ...jest.requireActual('../../src/api/auth'),
             verifyJwt: () => async (ctx, next) => {
-                const Users = getRepository('User')
-                const user  = await Users.findOne({username: username})
-                ctx.state.jwt = user.token
-                return next()
+                const firstName = (typeof(userName) === 'function') ? userName() : userName
+                const user      = await getRepository('User').findOne({firstName: firstName})
+                ctx.state.jwt   = user.authToken
+                ctx.state.user  = user
+                await next()
+            },
+            userAuth: () => async (ctx, next) => {
+                await next()
             }
         }
     })

@@ -7,6 +7,7 @@ async function initDatabase() {
 }
 
 module.exports = async () => {
+    console.log('global-setup')
     process.env.NODE_ENV = 'test'
     process.env.TYPEORM_DATABASE = 'imeter_test'
     await initDatabase()

@@ -1,4 +1,5 @@
-const { getRepository } = require('typeorm')
+const { pickBy, identity} = require('lodash')
+const { getRepository }   = require('typeorm')
 
 module.exports = { mount, index, show, create, update, destroy }
 
@@ -8,22 +9,32 @@ function mount(router) {
     router.get    ('/locations/:id', show)
     router.put    ('/locations/:id', update)
     router.delete ('/locations/:id', destroy)
+    router.get    ('/customers/:customerId/locations', index)
+    router.post   ('/customers/:customerId/locations', create)
 }
 
 // ---------- endpoints ----------
 async function index(ctx) {
-    const locations = await Locations().find({customerId: customerId(ctx)})
+    // const filter = (ctx.state.user.role === 'admin') ? {} : { customerId: customerId(ctx) }
+    const filter = pickBy({ customerId: customerId(ctx, { throwNotFound: false }) }, identity)
+    const locations = await Locations().find(filter)
     ctx.body = { locations: locations.map(serialize) }
 }
 
 async function show(ctx) {
     const location = await Locations().findOne(ctx.params.id)
-    ctx.assert(location, 404, 'location not found')
+    ctx.assert(location && location.customerId === customerId(ctx), 404, 'location not found')
     ctx.body = {location: serialize(location)}
 }
 
 async function create(ctx) {
     const attrs = ctx.request.body.location
+    ctx.assert(attrs, 400, 'invalid location attributes')
+
+    if (ctx.state.user.role === 'admin')
+        attrs.customerId = +ctx.params.customerId || attrs.customerId
+    else
+        attrs.customerId = ctx.state.user.customerId
     ctx.assert(Locations().target.validate(attrs), 400, 'invalid location attributes')
     const location = await Locations().save(Locations().create(attrs))
 
@@ -33,19 +44,18 @@ async function create(ctx) {
 
 async function update(ctx) {
     let location = await Locations().findOne(ctx.params.id)
-    ctx.assert(location, 404, 'location not found')
+    ctx.assert(location && location.customerId === customerId(ctx), 404, 'location not found')
 
-    const attrs = ctx.request.body.location
+    const attrs = {...ctx.request.body.location, customerId: location.customerId}
     ctx.assert(Locations().target.validate(attrs), 400, 'invalid location attributes')
     await Locations().update(location.id, attrs)
 
     ctx.status = 204
-    ctx.body   = null
 }
 
 async function destroy(ctx) {
     let location = await Locations().findOne(ctx.params.id)
-    ctx.assert(location, 404, 'location not found')
+    ctx.assert(location && location.customerId === customerId(ctx), 404, 'location not found')
 
     await Locations().delete(location.id)
 
@@ -58,12 +68,13 @@ function Locations() {
     return getRepository('Location')
 }
 
-function customerId(ctx) {
+function customerId(ctx, {throwNotFound = true} = {}) {
     if (ctx.state.user.customerId)
         return ctx.state.user.customerId
     if (ctx.state.user.role === 'admin')
-        return ctx.params.customerId
-    ctx.throw(404, 'locations or customer not found')
+        return parseInt(ctx.params.customerId)
+    if (throwNotFound)
+        ctx.throw(404, 'locations or customer not found')
 }
 
 function serialize(location) {

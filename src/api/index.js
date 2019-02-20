@@ -16,8 +16,8 @@ function mount(server, prefix = undefined) {
         server.use(bodyParser())
         server.use(auth.verifyJwt())
         server.use(auth.userAuth())
-        // if (isDev)
-        //     setupWatcher(() => mount(server, prefix))
+        if (isDev)
+            setupWatcher(() => mount(server, prefix))
     }
 
     const router     = createRouter(prefix)
@@ -33,6 +33,7 @@ function createRouter(prefix) {
     require('./auth').mount(router)
     require('./users').mount(router)
     require('./customers').mount(router)
+    require('./locations').mount(router)
     require('./version').mount(router)
     return router
 }

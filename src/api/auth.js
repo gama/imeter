@@ -26,11 +26,11 @@ function verifyJwt() {
 function userAuth() {
     return async (ctx, next) => {
         if (ctx.state.jwt) {
-            const User = getRepository('User')
-            ctx.state.user = await User.findOne({ authToken: ctx.state.jwt })
+            const Users = getRepository('User')
+            ctx.state.user = await Users.findOne({ authToken: ctx.state.jwt })
             ctx.assert(ctx.state.user, 401, 'invalid or expired auth token')
         }
-        return next()
+        await next()
     }
 }
 

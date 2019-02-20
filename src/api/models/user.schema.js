@@ -7,13 +7,14 @@ module.exports = new EntitySchema({
     tableName: 'users',
     omitAttrs: ['password'],
     columns:   {
-        id:         { type: 'int', primary: true, generated: true },
-        email:      { type: 'varchar' },
-        password:   { type: 'varchar' },
-        firstName:  { type: 'varchar' },
-        lastName:   { type: 'varchar' },
-        role:       { type: 'varchar' },
-        authToken:  { type: 'varchar', nullable: true }
+        id:         { type: 'int',     primary: true,       generated: true },
+        customerId: { type: 'int',     name: 'customer_id', nullable: true  },
+        email:      { type: 'varchar'                                       },
+        password:   { type: 'varchar'                                       },
+        firstName:  { type: 'varchar', name: 'first_name'                   },
+        lastName:   { type: 'varchar', name: 'last_name'                    },
+        role:       { type: 'varchar'                                       },
+        authToken:  { type: 'varchar', name: 'auth_token', nullable: true   }
     },
     relations: {
         customer: {

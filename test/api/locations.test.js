@@ -3,12 +3,18 @@
 const request          = require('supertest')
 const db               = require('../../src/api/db')
 const { loadFixtures } = require('../../data/seed.js')
+const mocks            = require('./mocks')
 
-require('./mocks').mock('config', 'authMiddleware')
-const app    = require('./server')
-const server = app.callback()
+const userNameFn = jest.fn(() => 'Emily')
+const loginAs    = (name) => userNameFn.mockImplementationOnce(() => name)
+mocks.authMiddleware(userNameFn)
+mocks.config()
 
-test('locations/index (scoped by logged user)', async () => {
+const app      = require('./server')
+const server   = app.callback()
+
+
+test('locations/index', async () => {
     const resp = await request(server).get('/api/locations')
 
     expect(resp.status).toEqual(200)
@@ -27,8 +33,8 @@ test('locations/show', async () => {
 })
 
 test('locations/create', async () => {
-    const attrs    = { 'name': 'Apartment 401' }
-    const expAttrs = { ...attrs, customerId: 10 }
+    const attrs    = { 'name': 'Apartment 401', customerId: 10 }
+    const expAttrs = { ...attrs, customerId: 11 }
 
     const resp = await request(server)
         .post('/api/locations')
@@ -36,10 +42,11 @@ test('locations/create', async () => {
 
     expect(resp.status).toEqual(201)
     expect(resp.body.location).toBeTruthy()
-    expect(resp.body.location).toEqual(expect.objectContaining(attrs))
-    expect(await Locations.count({})).toEqual(5)
-    expect(await Locations.findOne({name: 'New Condo'})).toEqual(expect.objectContaining(expAttrs))
+    expect(resp.body.location).toEqual(expect.objectContaining(expAttrs))
+    expect(await Locations.count({})).toEqual(11)
+    expect(await Locations.findOne({name: 'Apartment 401'})).toEqual(expect.objectContaining(expAttrs))
 })
+
 
 test('locations/update', async () => {
     const attrs = { name: 'Edited Apartment' }
@@ -47,9 +54,10 @@ test('locations/update', async () => {
         .put('/api/locations/35')
         .send({location: attrs})
 
+
     expect(resp.status).toEqual(204)
     expect(resp.body).toEqual({})
-    expect(await Locations.count({})).toEqual(4)
+    expect(await Locations.count({})).toEqual(10)
     expect(await Locations.findOne({name: 'Apartment 102'})).toBeUndefined()
     expect(await Locations.findOne({name: 'Edited Apartment'})).toEqual(expect.objectContaining(attrs))
 })
@@ -59,8 +67,8 @@ test('locations/destroy', async () => {
 
     expect(resp.status).toEqual(204)
     expect(resp.body).toEqual({})
-    expect(await Locations.count({})).toEqual(3)
-    expect(await Locations.findOne({name: 'Park Royal Condo'})).toBeUndefined()
+    expect(await Locations.count({})).toEqual(9)
+    expect(await Locations.findOne({name: 'Apartment 102'})).toBeUndefined()
 })
 
 test('location not-found errors', async () => {
@@ -95,6 +103,53 @@ test('invalid attributes errors', async () => {
 
     resp = await request(server).put('/api/locations/35').send({invalid: true})
     expect(resp.status).toEqual(400)
+})
+
+describe('>> logged in as admin', () => {
+    beforeEach(() => loginAs('Admin'))
+
+    test('locations/index', async () => {
+        const resp = await request(server).get('/api/locations')
+
+        expect(resp.status).toEqual(200)
+        expect(resp.body.locations).toHaveLength(10)
+    })
+
+    test('customers/:cid/locations/index', async () => {
+        const resp = await request(server).get('/api/customers/10/locations')
+
+        expect(resp.status).toEqual(200)
+        expect(resp.body.locations).toHaveLength(4)
+    })
+
+    test('locations/create', async () => {
+        const attrs = { 'name': 'Apartment 402', customerId: 13 }
+
+        const resp = await request(server)
+            .post('/api/locations')
+            .send({location: attrs})
+
+        expect(resp.status).toEqual(201)
+        expect(resp.body.location).toBeTruthy()
+        expect(resp.body.location).toEqual(expect.objectContaining(attrs))
+        expect(await Locations.count({})).toEqual(11)
+        expect(await Locations.findOne({name: 'Apartment 402'})).toEqual(expect.objectContaining(attrs))
+    })
+
+    test('customers/:cid/locations/create', async () => {
+        const attrs    = { 'name': 'Apartment 402' }
+        const expAttrs = {...attrs, customerId: 12 }
+
+        const resp = await request(server)
+            .post('/api/customers/12/locations')
+            .send({location: attrs})
+
+        expect(resp.status).toEqual(201)
+        expect(resp.body.location).toBeTruthy()
+        expect(resp.body.location).toEqual(expect.objectContaining(expAttrs))
+        expect(await Locations.count({})).toEqual(11)
+        expect(await Locations.findOne({name: 'Apartment 402'})).toEqual(expect.objectContaining(expAttrs))
+    })
 })
 
 // ----- fixtures, helpers, setup & teardown ----

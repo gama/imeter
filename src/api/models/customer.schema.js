@@ -7,7 +7,7 @@ module.exports = new EntitySchema({
     tableName: 'customers',
     columns:   {
         id:   { primary: true, type: 'int', generated: true },
-        name: { type: 'varchar' }
+        name: { type: 'varchar'                             }
     },
     relations: {
         locations: {

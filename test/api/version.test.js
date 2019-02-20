@@ -3,7 +3,7 @@
 const request = require('supertest')
 const app     = require('./server')
 
-test('version', async () => {
+test.only('version', async () => {
     const resp = await request(app.callback()).get('/api/version')
     expect(resp.status).toEqual(200)
     expect(resp.body).toEqual(expect.objectContaining({

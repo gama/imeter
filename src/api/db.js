@@ -14,8 +14,12 @@ async function getConnection() {
 }
 
 async function closeConnection() {
-    if (typeorm.getConnectionManager().has('default'))
-        await (await typeorm.getConnection()).close()
+    if (typeorm.getConnectionManager().has('default')) {
+        const connection = await typeorm.getConnection()
+        const index      = typeorm.getConnectionManager().connections.indexOf(connection)
+        typeorm.getConnectionManager().connections.splice(index)
+        await connection.close()
+    }
 }
 
 async function getRepository(...args) {
