@@ -14,8 +14,11 @@ module.exports = new EntitySchema({
     },
     relations: {
         location: {
-            target:  'Location',
-            type:    'belongs-to'
+            target:     'Location',
+            type:       'many-to-one',
+            onDelete:   'CASCADE',
+            joinColumn: { name: 'location_id' },
+            eager:      true
         },
         measurements: {
             target:  'Measurement',

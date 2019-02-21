@@ -1,25 +1,32 @@
+const Router            = require('koa-router')
 const { getRepository } = require('typeorm')
+const { isAdmin }       = require('./auth')
 
 module.exports = { mount, index, show, create, update, destroy }
 
-function mount(router) {
-    router.get    ('/customers',     index)
-    router.post   ('/customers',     create)
-    router.get    ('/customers/:id', show)
-    router.put    ('/customers/:id', update)
-    router.delete ('/customers/:id', destroy)
+function mount(parentRouter, prefix='/customers') {
+    const router = new Router({ prefix })
+    router.use(isAdmin())
+
+    router.get    ('/',    index)
+    router.post   ('/',    create)
+    router.get    ('/:id', show)
+    router.put    ('/:id', update)
+    router.delete ('/:id', destroy)
+
+    parentRouter.use(router.routes())
 }
 
 // ---------- endpoints ----------
 async function index(ctx) {
     const customers = await Customers().find({})
-    ctx.body = {customers: customers.map(serialize)}
+    ctx.body = { customers }
 }
 
 async function show(ctx) {
     const customer = await Customers().findOne(ctx.params.id)
     ctx.assert(customer, 404, 'customer not found')
-    ctx.body = {customer: serialize(customer)}
+    ctx.body = { customer }
 }
 
 async function create(ctx) {
@@ -28,7 +35,7 @@ async function create(ctx) {
     const customer = await Customers().save(Customers().create(attrs))
 
     ctx.status = 201
-    ctx.body   = {customer: serialize(customer)}
+    ctx.body   = { customer }
 }
 
 async function update(ctx) {
@@ -56,8 +63,4 @@ async function destroy(ctx) {
 // ---------- private functions and helpers ----------
 function Customers() {
     return getRepository('Customer')
-}
-
-function serialize(customer) {
-    return customer
 }

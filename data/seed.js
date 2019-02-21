@@ -16,6 +16,8 @@ async function loadAllFixtures() {
     await loadFixtures('locations', queryRunner)
     await loadFixtures('meters', queryRunner)
     await loadFixtures('measurements', queryRunner)
+
+    queryRunner.release()
 }
 
 async function getQueryRunner() {

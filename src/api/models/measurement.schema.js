@@ -14,12 +14,17 @@ module.exports = new EntitySchema({
     },
     relations: {
         meter: {
-            target: 'Meter',
-            type:   'belongs-to'
+            target:     'Meter',
+            type:       'many-to-one',
+            onDelete:   'CASCADE',
+            joinColumn: { name: 'meter_id' },
+            eager:      true
         },
         operator: {
-            target: 'User',
-            type:   'belongs-to'
+            target:   'User',
+            type:     'many-to-one',
+            onDelete: 'SET NULL',
+            joinColumn: { name: 'operator_id' }
         },
     }
 })

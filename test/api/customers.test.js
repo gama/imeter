@@ -1,10 +1,11 @@
 /** @jest-environment node */
 
-const request          = require('supertest')
-const db               = require('../../src/api/db')
-const { loadFixtures } = require('../../data/seed.js')
-
-require('./mocks').mock('config', 'authMiddleware')
+const request             = require('supertest')
+const db                  = require('../../src/api/db')
+const { loadAllFixtures } = require('../../data/seed.js')
+const mocks               = require('./mocks')
+    
+mocks.mock('config', 'authMiddleware')
 const app    = require('./server')
 const server = app.callback()
 
@@ -91,11 +92,19 @@ test('invalid attributes errors', async () => {
     expect(resp.status).toEqual(400)
 })
 
+test('permission denied when logged in as non-admin', async () => {
+    mocks.loginAs('Emily')
+    const expect401 = (resp) => expect(resp.status).toEqual(401)
+
+    expect401(await request(server).get('/api/customers'))
+    expect401(await request(server).get('/api/customers/13'))
+    expect401(await request(server).post('/api/customers').send({}))
+    expect401(await request(server).put('/api/customers/13').send({}))
+    expect401(await request(server).delete('/api/customers/13'))
+})
+
 // ----- fixtures, helpers, setup & teardown ----
 let Customers
 beforeAll(async () => Customers = await db.getRepository('Customer'))
 afterAll(async  () => db.closeConnection())
-afterEach(async () => {
-    await Customers.clear()
-    await loadFixtures('customers')
-})
+afterEach(async () => await loadAllFixtures())

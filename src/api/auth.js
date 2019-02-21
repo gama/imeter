@@ -5,7 +5,7 @@ const { sign }          = require('jsonwebtoken')
 const jwt               = require('koa-jwt')
 const { getRepository } = require('typeorm')
 
-module.exports = { mount, login, logout, verifyJwt, userAuth, generateToken }
+module.exports = { mount, login, logout, verifyJwt, userAuth, isAdmin, generateToken }
 
 const PUBLIC_ENDPOINTS = [
     ['POST', /^\/api\/auth/],     // login
@@ -25,6 +25,7 @@ function verifyJwt() {
 
 function userAuth() {
     return async (ctx, next) => {
+        console.log('********************* USERAUTH **************')
         if (ctx.state.jwt) {
             const Users = getRepository('User')
             ctx.state.user = await Users.findOne({ authToken: ctx.state.jwt })
@@ -34,6 +35,12 @@ function userAuth() {
     }
 }
 
+function isAdmin() {
+    return async (ctx, next) => {
+        ctx.assert(ctx.state.user.role === 'admin', 401, 'permission denied')
+        return await next()
+    }
+}
 
 // ----- routes -----
 function mount(router) {

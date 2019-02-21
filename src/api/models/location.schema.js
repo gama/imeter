@@ -12,13 +12,14 @@ module.exports = new EntitySchema({
     },
     relations: {
         customer: {
-            target:  'Customer',
-            type:    'belongs-to'
+            target:   'Customer',
+            type:     'many-to-one',
+            onDelete: 'CASCADE',
+            joinColumn: { name: 'customer_id' },
         },
         meters: {
-            target:  'Meter',
-            type:    'one-to-many',
-            cascade: true
+            target:   'Meter',
+            type:     'one-to-many'
         }
     }
 })

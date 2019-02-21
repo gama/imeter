@@ -1,10 +1,10 @@
-/** @jest-environment node */
-
-const request          = require('supertest')
-const db               = require('../../src/api/db')
-const { loadFixtures } = require('../../data/seed.js')
-
-require('./mocks').mock('config', 'authMiddleware')
+/** @jest-environment node */ 
+const request             = require('supertest')
+const db                  = require('../../src/api/db')
+const { loadAllFixtures } = require('../../data/seed.js')
+const mocks               = require('./mocks')
+    
+mocks.mock('config', 'authMiddleware')
 const app    = require('./server')
 const server = app.callback()
 
@@ -70,13 +70,12 @@ test('users/update', async () => {
 })
 
 test('users/destroy', async () => {
-    const user = await Users.findOne({firstName: 'John'})
-    const resp = await request(server).delete('/api/users/' + user.id)
+    const resp = await request(server).delete('/api/users/25')
 
     expect(resp.status).toEqual(204)
     expect(resp.body).toEqual({})
     expect(await Users.count({})).toEqual(5)
-    expect(await Users.findOne({firstName: 'John'})).toBeUndefined()
+    expect(await Users.findOne(15)).toBeUndefined()
 })
 
 test('user not-found errors', async () => {
@@ -103,11 +102,19 @@ test('invalid attributes errors', async () => {
     expect(resp.status).toEqual(400)
 })
 
+test('permission denied when logged in as non-admin', async () => {
+    mocks.loginAs('Emily')
+    const expect401 = (resp) => expect(resp.status).toEqual(401)
+
+    expect401(await request(server).get('/api/users'))
+    expect401(await request(server).get('/api/users/25'))
+    expect401(await request(server).post('/api/users').send({}))
+    expect401(await request(server).put('/api/users/25').send({}))
+    expect401(await request(server).delete('/api/users/25'))
+})
+
 // ----- fixtures, helpers, setup & teardown ----
 let Users
 beforeAll(async () => Users = await db.getRepository('User'))
 afterAll(async  () => db.closeConnection())
-afterEach(async () => {
-    await Users.clear()
-    await loadFixtures('users')
-})
+afterEach(async () => await loadAllFixtures())

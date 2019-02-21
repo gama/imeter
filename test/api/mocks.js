@@ -9,14 +9,17 @@ function config() {
     })
 }
 
-function authMiddleware(userName='Admin') {
+const firstName   = jest.fn(() => 'Admin')
+const loginAs     = (name) => firstName.mockImplementation(() => name)
+const loginOnceAs = (name) => firstName.mockImplementationOnce(() => name)
+
+function authMiddleware() {
     jest.doMock('../../src/api/auth', () => {
         const { getRepository } = require('typeorm')
         return {
             ...jest.requireActual('../../src/api/auth'),
             verifyJwt: () => async (ctx, next) => {
-                const firstName = (typeof(userName) === 'function') ? userName() : userName
-                const user      = await getRepository('User').findOne({firstName: firstName})
+                const user      = await getRepository('User').findOne({firstName: firstName()})
                 ctx.state.jwt   = user.authToken
                 ctx.state.user  = user
                 await next()
@@ -40,8 +43,9 @@ function mock(...names) {
 
 const mocks = {
     config,
-    // baseModel,
     authMiddleware,
+    loginAs,
+    loginOnceAs,
     defaults,
     mock,
 }

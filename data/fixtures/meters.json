@@ -6,13 +6,13 @@
   {"id": 44, "locationId": 32, "kind": "water", "serialNumber": "000005", "model": "M3"},
   {"id": 45, "locationId": 32, "kind": "gas",   "serialNumber": "000006", "model": "M4"},
   {"id": 46, "locationId": 33, "kind": "water", "serialNumber": "000007", "model": "M3"},
-  {"id": 47, "locationId": 34, "kind": "water", "serialNumber": "000009", "model": "M1"},
-  {"id": 48, "locationId": 34, "kind": "gas",   "serialNumber": "000010", "model": "M2"},
-  {"id": 49, "locationId": 35, "kind": "water", "serialNumber": "000011", "model": "M1"},
-  {"id": 50, "locationId": 35, "kind": "gas",   "serialNumber": "000012", "model": "M2"},
-  {"id": 51, "locationId": 36, "kind": "water", "serialNumber": "000013", "model": "M1"},
-  {"id": 52, "locationId": 36, "kind": "gas",   "serialNumber": "000014", "model": "M4"},
-  {"id": 53, "locationId": 37, "kind": "water", "serialNumber": "000015", "model": "M3"},
-  {"id": 54, "locationId": 38, "kind": "water", "serialNumber": "000017", "model": "M3"},
-  {"id": 55, "locationId": 39, "kind": "water", "serialNumber": "000019", "model": "M3"}
+  {"id": 47, "locationId": 34, "kind": "water", "serialNumber": "000008", "model": "M1"},
+  {"id": 48, "locationId": 34, "kind": "gas",   "serialNumber": "000009", "model": "M2"},
+  {"id": 49, "locationId": 35, "kind": "water", "serialNumber": "000010", "model": "M1"},
+  {"id": 50, "locationId": 35, "kind": "gas",   "serialNumber": "000011", "model": "M2"},
+  {"id": 51, "locationId": 36, "kind": "water", "serialNumber": "000012", "model": "M1"},
+  {"id": 52, "locationId": 36, "kind": "gas",   "serialNumber": "000013", "model": "M4"},
+  {"id": 53, "locationId": 37, "kind": "water", "serialNumber": "000014", "model": "M3"},
+  {"id": 54, "locationId": 38, "kind": "water", "serialNumber": "000015", "model": "M3"},
+  {"id": 55, "locationId": 39, "kind": "water", "serialNumber": "000016", "model": "M3"}
 ]
