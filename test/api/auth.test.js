@@ -75,7 +75,7 @@ test('logout fails due to authentication', async () => {
 
 // ----- helpers -----
 const signAsync = (payload) => {
-    const secret = fs.readFileSync(`${resolve(__dirname)}/../../data/.secret`)
+    const secret = fs.readFileSync(`${resolve(__dirname)}/../../.secret`)
     return new Promise((resolve, reject) => {
         sign(payload, secret, function (err, token) {
             return (err) ? reject(err) : resolve(token)

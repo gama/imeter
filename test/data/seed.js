@@ -1,4 +1,4 @@
-const { getConnection } = require('../src/api/db')
+const { getConnection } = require('../../src/api/db')
 
 module.exports = { loadAllFixtures, loadFixtures }
 

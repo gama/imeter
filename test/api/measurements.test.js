@@ -3,7 +3,7 @@
 const _                   = require('lodash')
 const request             = require('supertest')
 const db                  = require('../../src/api/db')
-const { loadAllFixtures } = require('../../data/seed.js')
+const { loadAllFixtures } = require('../data/seed')
 const mocks               = require('./mocks')
 const { loginAs }         = mocks
 

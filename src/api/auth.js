@@ -47,7 +47,7 @@ function getSecret() {
     if (process.env.NODE_ENV === 'production') {
         secret = process.env.NODE_JWT_SECRET
     } else {
-        const secretPath = `${resolve(__dirname)}/../../data/.secret`
+        const secretPath = `${resolve(__dirname)}/../../.secret`
         secret           = fs.readFileSync(secretPath)
     }
     if (!secret)
