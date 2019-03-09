@@ -19,14 +19,16 @@ afterAll(async ()   => db.closeConnection())
 test('login succeeds', async () => {
     expect((await protectedRequest(server, 'invalid-token')).status).toEqual(401)
 
+    const { password, authToken, ...expected } = user
     const resp = await request(server).
         post('/api/auth').
         send({email: user.email, password: user.password})
 
     expect(resp.status).toEqual(200)
-    expect(resp.body.token).toMatch(/.+/)
+    expect(resp.body.user).toMatchObject(expected)
+    expect(resp.body.user.authToken).toMatch(/.{32,}/)
     expect((await Users.findOne(user.id)).authToken).toMatch(/.{32,}/)
-    expect((await protectedRequest(server, resp.body.token)).status).toEqual(200)
+    expect((await protectedRequest(server, resp.body.user.authToken)).status).toEqual(200)
 })
 
 test('login fails due to invalid password', async () => {
@@ -72,6 +74,33 @@ test('logout fails due to authentication', async () => {
     expect(resp.body).toEqual({error: 'UnauthorizedError: Authentication Error'})
 })
 
+test('current user succeeds', async () => {
+    const user = await Users.findOne({firstName: 'Emily'})
+    await Users.update(user.id, {authToken: 'emily-token'})
+    const token = await signAsync('emily-token')
+    const { password, authToken, ...attrs } = user
+
+    const resp = await request(server).
+        get('/api/auth').
+        set('Authorization', `Bearer ${token}`)
+
+    expect(resp.status).toEqual(200)
+    expect(resp.body.user).toBeTruthy()
+    expect(resp.body.user).toEqual(attrs)
+    expect(resp.body.user.password).toBeUndefined()
+    expect(resp.body.user.authToken).toBeUndefined()
+})
+
+test('current user fails due to authentication', async () => {
+    await signAsync('emily-token')
+
+    const resp = await request(server).
+        get('/api/auth').
+        set('Authorization', 'Bearer invalid-token')
+
+    expect(resp.status).toEqual(401)
+    expect(resp.body).toEqual({error: 'UnauthorizedError: Authentication Error'})
+})
 
 // ----- helpers -----
 const signAsync = (payload) => {

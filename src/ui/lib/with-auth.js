@@ -9,8 +9,8 @@ export default function withAuth(App) {
             if (typeof App.getInitialProps === 'function')
                 appProps = await App.getInitialProps(appContext)
 
-            if (this.skipAuthForPage(appProps) || this.hasAuthToken(appContext.ctx)) {
-                this.updateStateWithAuthToken(appContext.ctx)
+            if (this.skipAuthForPage(appProps) || this.isAuthenticated(appContext.ctx)) {
+                await this.updateStateWithAuth(appContext.ctx)
                 return appProps
             }
 
@@ -21,14 +21,34 @@ export default function withAuth(App) {
             return !appProps.pageProps || appProps.pageProps.skipAuth
         }
 
-        static hasAuthToken(context) {
+        static isAuthenticated(context) {
             return !!nextCookie(context).authToken
-            // return appContext.ctx.reduxStore.getState().authToken
         }
 
-        static updateStateWithAuthToken(context) {
+        static async updateStateWithAuth(context) {
             const { authToken } = nextCookie(context)
-            Object.assign(context.reduxStore.getState(), { authToken })
+            if (!authToken)
+                return
+
+            const state = context.reduxStore.getState()
+            if (state.user && state.user.authToken === authToken)
+                return
+
+            if (process.browser)
+                throw new Error('state.user should be set on SSR or by the login action')
+
+            Object.assign(state, { user: await this.fetchCurrentUser(context, authToken) })
+        }
+
+        static async fetchCurrentUser(context, authToken) {
+            const headers = { 'Authorization': 'Bearer ' + authToken }
+            const resp    = await fetch(this.currentUserUrl(context), { headers })
+            const json    = await resp.json()
+            return json.user
+        }
+
+        static currentUserUrl(context) {
+            return 'http://' + context.req.headers.host + '/api/auth'
         }
 
         static redirect(url, ctx) {

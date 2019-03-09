@@ -56,7 +56,8 @@
         "supertest": "^3.4.2"
     },
     "scripts": {
-        "dev":         "node src/server.js",
+        "dev":         "NODE_ENV=development node src/server.js",
+        "dev:debug":   "NODE_ENV=development node inspect src/server.js",
         "dev:seed":    "node test/data/seed.js",
         "build":       "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' next build src/ui",
         "start":       "NODE_ENV=production NODE_OPTIONS='-r ./src/lib/with-preact' node src/server.js",
@@ -68,5 +69,8 @@
         "test":        "jest --runInBand --verbose",
         "test:watch":  "jest --runInBand --verbose --watch",
         "postinstall": "yarn build"
+    },
+    "_moduleAliases": {
+        "ivmeter-auth": "src/api/auth.js"
     }
 }

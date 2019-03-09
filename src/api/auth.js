@@ -1,9 +1,10 @@
 const fs                = require('fs')
 const { resolve }       = require('path')
 const jwt               = require('koa-jwt')
+const verify            = require('koa-jwt/lib/verify')
 const { getRepository } = require('typeorm')
 
-module.exports = { verifyJwt, userAuth, isAdmin, getSecret }
+module.exports = { verifyJwt, userAuth, isAdmin, decodeToken, getSecret }
 
 const PUBLIC_ENDPOINTS = [
     ['POST', /^\/api\/auth/],     // login
@@ -41,6 +42,11 @@ function isAdmin() {
 }
 
 // ----- helpers -----
+
+async function decodeToken(token) {
+    console.log('token: %s; secret: %s', token, getSecret())
+    return await verify(token, getSecret())
+}
 
 function getSecret() {
     let secret

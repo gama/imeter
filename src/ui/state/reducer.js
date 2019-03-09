@@ -21,9 +21,9 @@ const reducer = (state = initialState, action) => {
     // AUTH
     case actionTypes.LOGIN:
         console.log('LOGGED IN: %o', action)
-        return Object.assign({}, state, { fetching: false, authToken: action.token })
+        return Object.assign({}, state, { fetching: false, user: action.user })
     case actionTypes.LOGOUT:
-        return Object.assign({}, state, { fetching: false, authToken: null })
+        return Object.assign({}, state, { fetching: false, user: null })
 
     default: return state
     }

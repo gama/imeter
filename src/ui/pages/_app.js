@@ -4,6 +4,8 @@ import { Provider }           from 'preact-redux'
 import withReduxStore         from '../lib/with-redux-store'
 import withAuth               from '../lib/with-auth'
 
+import 'preact/debug'
+
 class App extends NextApp {
     static async getInitialProps(appContext) {
         let pageProps = {}

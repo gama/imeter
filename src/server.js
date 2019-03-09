@@ -1,3 +1,4 @@
+require('module-alias/register')
 require('@zeit/next-preact/alias')()
 const Koa = require('./lib/koa-recomposable')
 const Ui  = require('./ui')

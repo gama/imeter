@@ -45,7 +45,7 @@ export const login = (email, password, rememberMe, nextUrl) => async dispatch =>
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
 
         dispatch({ type: actionTypes.LOGIN, ...data })
-        cookie('authToken', data.token, { expires: dateNDaysInTheFuture(30) })
+        cookie('authToken', data.user.authToken, { expires: dateNDaysInTheFuture(30) })
         Router.push(nextUrl || '/')
     } catch (error) {
         console.error('fetch failed: ', error)
@@ -54,6 +54,7 @@ export const login = (email, password, rememberMe, nextUrl) => async dispatch =>
 }
 
 export const logout = () => async dispatch => {
+    console.log()
     try {
         dispatch({ type: actionTypes.FETCHING })
         const response = await fetchWithDelete('/api/auth')

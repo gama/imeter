@@ -1,5 +1,4 @@
 import React       from 'preact'
-import { connect } from 'preact-redux'
 import Header      from './header'
 import Footer      from './footer'
 import '../styles/style.global.sass'
@@ -16,8 +15,4 @@ function Layout(props) {
     )
 }
 
-const mapStateToProps = (state) => {
-    return { isLoggedIn: !!state.authToken }
-}
-
-export default connect(mapStateToProps)(Layout)
+export default Layout

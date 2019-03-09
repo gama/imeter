@@ -15,7 +15,6 @@ class Header extends React.Component {
     }
 
     onBurgerClick() {
-        console.log('BURGER CLICK')
         this.setState({ active: !this.state.active })
     }
 
@@ -32,11 +31,12 @@ class Header extends React.Component {
                         <span className="navbar-item">
                             <h2 className={style.title}>iMETER<span className={style.subtitle}>Management Interface</span></h2>
                         </span>
-                        {props.authToken && <NavbarBurger activeClass={this.activeClass()} onClick={this.onBurgerClick.bind(this)} />}
+                        {props.user && <NavbarBurger activeClass={this.activeClass()} onClick={this.onBurgerClick.bind(this)} />}
                     </div>
-                    {props.authToken && <NavbarMenu activeClass={this.activeClass()} logout={props.logout} />}
+                    {props.user && <NavbarMenu activeClass={this.activeClass()} logout={props.logout} user={props.user} />}
                 </nav>
-            </header>)
+            </header>
+        )
     }
 }
 
@@ -50,27 +50,39 @@ function NavbarBurger({ activeClass, onClick }) {
     )
 }
 
-function NavbarMenu({ activeClass, logout }) {
-    const logoutClicked = (logout) => (event) => {
-        event.preventDefault()
-        logout()
-    }
-
+function NavbarMenu({ activeClass, user, logout }) {
     return (
         <div id="menu" className={'navbar-menu' + activeClass}>
             <div className="navbar-end">
-                {/*<Link href="/clock"><a className={style.navbaritem + ' navbar-item'}>Clock</a></Link>*/}
-                {/*<Link href="/counter"><a className={style.navbaritem + ' navbar-item'}>Counter</a></Link>*/}
-                {/*<Link href="/tv-shows"><a className={style.navbaritem + ' navbar-item'}>Tv Shows</a></Link>*/}
-                {/*<Link href="/about"><a className={style.navbaritem + ' navbar-item'}>About</a></Link>*/}
-                <Link href="/meters" ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-tachometer" />Meters</a></Link>
-                <Link href="/reports"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-bar-chart" />Reports</a></Link>
-                <Link href="/logout" ><a className={style.navbaritem + ' navbar-item'} onClick={logoutClicked(logout)}><i className="fa fa-sign-out" /> Logout</a></Link>
+                {user.role === 'customer' && <Link href="/meters"   ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-tachometer" />Meters</a   ></Link>}
+                {user.role === 'customer' && <Link href="/reports"  ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-bar-chart"  />Reports</a  ></Link>}
+                {user.role === 'admin'    && <Link href="/customers"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-handshake-o"/>Customers</a></Link>}
+                {user.role === 'admin'    && <Link href="/users"    ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-users"      />Users</a    ></Link>}
+                {user && <UserDropdown {...{user, logout}} /> }
             </div>
         </div>
     )
 }
 
-const mapStateToProps = ({ authToken }) => ({ authToken })
+function UserDropdown({user, logout}) {
+    const logoutClicked = (event) => {
+        event.preventDefault()
+        logout()
+    }
+
+    return (
+        <div className={style.navbaritem + ' navbar-item has-dropdown is-hoverable'}>
+            <a className={style.dropdownlink + ' navbar-link is-arrowless'}><i className="fa fa-user-circle" /></a>
+
+            <div className="navbar-dropdown is-right">
+                <div className={style.navbaritem + ' navbar-item'}>{user.firstName}</div>
+                <hr className="navbar-divider" />
+                <Link href="/logout" ><a className={style.navbaritem + ' navbar-item'} onClick={logoutClicked}><i className="fa fa-sign-out" />Logout</a></Link>
+            </div>
+        </div>
+    )
+}
+
+const mapStateToProps = ({ user }) => ({ user })
 const actions = { logout }
 export default connect(mapStateToProps, actions)(Header)

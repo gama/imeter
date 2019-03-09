@@ -6,8 +6,14 @@ const { getSecret }     = require('../auth')
 module.exports = { mount, login, logout, generateToken }
 
 function mount(router) {
+    router.get    ('/auth', current)
     router.post   ('/auth', login)
     router.delete ('/auth', logout)
+}
+
+async function current(ctx) {
+    const { password, authToken, ...attrs } = ctx.state.user
+    ctx.body = { user: attrs }
 }
 
 async function login(ctx) {
@@ -22,7 +28,8 @@ async function login(ctx) {
     const { rawToken, signedToken } = await generateToken()
     await Users.update(user, {authToken: rawToken})
 
-    ctx.body = { token: signedToken }
+    ctx.body = { user: serializeUser(user, signedToken) }
+
     console.log(`AUTH | user ${user.email} logged in`)
 }
 
@@ -51,4 +58,9 @@ function signAsync(payload, secret) {
             return (err) ? reject(err) : resolve(token)
         })
     })
+}
+
+function serializeUser(dbUser, signedToken) {
+    const { password, ...user } = { ...dbUser, authToken: signedToken }
+    return user
 }
