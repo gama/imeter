@@ -3,14 +3,16 @@ import fetch  from 'isomorphic-unfetch'
 import cookie from 'component-cookie'
 
 export const actionTypes = {
-    TICK:        'TICK',
-    INCREMENT:   'INCREMENT',
-    DECREMENT:   'DECREMENT',
-    RESET:       'RESET',
-    FETCHING:    'FETCHING',
-    FETCH_ERROR: 'FETCH_ERROR',
-    LOGIN:       'LOGIN',
-    LOGOUT:      'LOGOUT'
+    TICK:            'TICK',
+    INCREMENT:       'INCREMENT',
+    DECREMENT:       'DECREMENT',
+    RESET:           'RESET',
+    FETCHING:        'FETCHING',
+    FETCH_ERROR:     'FETCH_ERROR',
+    FETCH_USERS:     'FETCH_USERS',
+    FETCH_CUSTOMERS: 'FETCH_CUSTOMERS',
+    LOGIN:           'LOGIN',
+    LOGOUT:          'LOGOUT'
 }
 
 export const serverRenderClock = (isServer) => dispatch => {
@@ -39,7 +41,7 @@ export const resetCount = () => dispatch => {
 export const login = (email, password, rememberMe, nextUrl) => async dispatch => {
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await fetchWithPost('/api/auth', { email, password, 'remember-me': rememberMe })
+        const response = await httpPost('/api/auth', { email, password, 'remember-me': rememberMe })
         const data     = await response.json()
         if (!response.ok)
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
@@ -54,10 +56,9 @@ export const login = (email, password, rememberMe, nextUrl) => async dispatch =>
 }
 
 export const logout = () => async dispatch => {
-    console.log()
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await fetchWithDelete('/api/auth')
+        const response = await httpDelete('/api/auth')
         if (!response.ok) {
             const data = await response.json()
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
@@ -72,16 +73,62 @@ export const logout = () => async dispatch => {
     }
 }
 
-const fetchWithPost = async (url, params) => {
-    return await fetch(url, {
+export const fetchCustomers = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: actionTypes.FETCHING })
+        const response = await httpGet('/api/customers', getState())
+        const data     = await response.json()
+        if (!response.ok)
+            return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
+
+        dispatch({ type: actionTypes.FETCH_CUSTOMERS, ...data})
+    } catch (error) {
+        console.error('fetch failed: ', error)
+        dispatch({ type: actionTypes.FETCH_ERROR, error: error })
+    }
+}
+
+export const fetchUsers = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: actionTypes.FETCHING })
+        const response = await httpGet('/api/users', getState())
+        const data     = await response.json()
+        if (!response.ok)
+            return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
+
+        dispatch({ type: actionTypes.FETCH_USERS, ...data})
+    } catch (error) {
+        console.error('fetch failed: ', error)
+        dispatch({ type: actionTypes.FETCH_ERROR, error: error })
+    }
+}
+
+// -------------------------------------------------------------------
+
+export const buildUrl = (path) => {
+    // const prefix = process.browser ? window.location.origin : process.env.IVMETER_API_URL
+    const prefix = typeof(window) === 'undefined' ? process.env.IVMETER_API_URL : ''
+    console.log('BUILD URL; PREFIX: %s', prefix)
+    return prefix + path
+}
+
+const httpGet = async (path, state) => {
+    return await fetch(buildUrl(path), {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${state.user.authToken}` }
+    })
+}
+
+const httpPost = async (path, params) => {
+    return await fetch(buildUrl(path), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body:   JSON.stringify(params)
     })
 }
 
-const fetchWithDelete = async (url) => {
-    return await fetch(url, {
+const httpDelete = async (path) => {
+    return await fetch(buildUrl(path), {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'},
     })

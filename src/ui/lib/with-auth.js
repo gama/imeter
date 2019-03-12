@@ -1,18 +1,19 @@
-import React      from 'preact'
-import Router     from 'next/router'
-import nextCookie from 'next-cookies'
+import React        from 'preact'
+import Router       from 'next/router'
+import nextCookie   from 'next-cookies'
+import { buildUrl } from '../state/actions'
 
 export default function withAuth(App) {
     return class AppWithAuth extends React.Component {
         static async getInitialProps(appContext) {
+            await this.updateStateWithAuth(appContext.ctx)
+
             let appProps = {}
             if (typeof App.getInitialProps === 'function')
                 appProps = await App.getInitialProps(appContext)
 
-            if (this.skipAuthForPage(appProps) || this.isAuthenticated(appContext.ctx)) {
-                await this.updateStateWithAuth(appContext.ctx)
+            if (this.isAuthenticated(appContext.ctx) || this.skipAuthForPage(appProps))
                 return appProps
-            }
 
             this.redirect('/login', appContext.ctx)
         }
@@ -22,7 +23,7 @@ export default function withAuth(App) {
         }
 
         static isAuthenticated(context) {
-            return !!nextCookie(context).authToken
+            return Boolean(context.reduxStore.getState().user)
         }
 
         static async updateStateWithAuth(context) {
@@ -42,23 +43,17 @@ export default function withAuth(App) {
 
         static async fetchCurrentUser(context, authToken) {
             const headers = { 'Authorization': 'Bearer ' + authToken }
-            const resp    = await fetch(this.currentUserUrl(context), { headers })
+            const resp    = await fetch(buildUrl('/api/auth'), { headers })
             const json    = await resp.json()
-            return json.user
-        }
-
-        static currentUserUrl(context) {
-            return 'http://' + context.req.headers.host + '/api/auth'
+            return { ...json.user, authToken: authToken }
         }
 
         static redirect(url, ctx) {
             console.debug('REDIRECTING TO ' + url)
-            if (process.browser) {  // eslint-disable-line no-undef
-                Router.push(url)
-            } else {
-                ctx.res.writeHead(302, { Location: url })
-                ctx.res.end()
-            }
+            if (process.browser)
+                return Router.push(url)
+            ctx.res.writeHead(302, { Location: url })
+            ctx.res.end()
         }
 
         constructor(props) {

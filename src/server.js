@@ -21,6 +21,7 @@ const handle = app.getRequestHandler()
     Ui.mount(server, handle)
 
     server.listen(port, () => {
-        console.log(`> Ready on http://localhost:${port}`)
+        process.env.IVMETER_API_URL = `http://localhost:${port}`
+        console.log(`> Ready on ${process.env.IVMETER_API_URL}`)
     })
 })()

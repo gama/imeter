@@ -58,6 +58,7 @@ function NavbarMenu({ activeClass, user, logout }) {
                 {user.role === 'customer' && <Link href="/reports"  ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-bar-chart"  />Reports</a  ></Link>}
                 {user.role === 'admin'    && <Link href="/customers"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-handshake-o"/>Customers</a></Link>}
                 {user.role === 'admin'    && <Link href="/users"    ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-users"      />Users</a    ></Link>}
+                <Link href="/about"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-question-circle" />About</a></Link>
                 {user && <UserDropdown {...{user, logout}} /> }
             </div>
         </div>

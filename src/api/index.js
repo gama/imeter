@@ -1,3 +1,4 @@
+const logger     = require('koa-logger')
 const Router     = require('koa-router')
 const bodyParser = require('koa-body')
 const chokidar   = require('chokidar')
@@ -12,6 +13,7 @@ let routes, allowedMethods
 function mount(app, prefix = undefined) {
     const initialMount = (!routes && !allowedMethods)
     if (initialMount) {
+        app.use(logger())
         app.use(jsonErrors())
         app.use(bodyParser())
         app.use(auth.verifyJwt())

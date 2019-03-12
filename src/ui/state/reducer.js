@@ -18,6 +18,13 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_ERROR:
         return Object.assign({}, state, { fetching: false, error: action.error })
 
+    case actionTypes.FETCH_CUSTOMERS:
+        console.log('FETCH CUSTOMERS')
+        return Object.assign({}, state, { fetching: false, error: undefined, customers: action.customers })
+    case actionTypes.FETCH_USERS:
+        console.log('FETCH USERS')
+        return Object.assign({}, state, { fetching: false, error: undefined, users: action.users })
+
     // AUTH
     case actionTypes.LOGIN:
         console.log('LOGGED IN: %o', action)
