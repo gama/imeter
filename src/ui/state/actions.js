@@ -1,6 +1,7 @@
-import Router from 'next/router'
-import fetch  from 'isomorphic-unfetch'
-import cookie from 'component-cookie'
+import Router        from 'next/router'
+import fetch         from 'isomorphic-unfetch'
+import cookie        from 'component-cookie'
+import { stringify } from 'querystring'
 
 export const actionTypes = {
     TICK:            'TICK',
@@ -73,10 +74,10 @@ export const logout = () => async dispatch => {
     }
 }
 
-export const fetchCustomers = () => async (dispatch, getState) => {
+export const fetchCustomers = (params) => async (dispatch, getState) => {
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await httpGet('/api/customers', getState())
+        const response = await httpGet('/api/customers', getState(), params)
         const data     = await response.json()
         if (!response.ok)
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
@@ -105,15 +106,13 @@ export const fetchUsers = () => async (dispatch, getState) => {
 
 // -------------------------------------------------------------------
 
-export const buildUrl = (path) => {
-    // const prefix = process.browser ? window.location.origin : process.env.IVMETER_API_URL
+export const buildUrl = (path, params) => {
     const prefix = typeof(window) === 'undefined' ? process.env.IVMETER_API_URL : ''
-    console.log('BUILD URL; PREFIX: %s', prefix)
-    return prefix + path
+    return prefix + path + (params ? `?${stringify(params)}` : '')
 }
 
-const httpGet = async (path, state) => {
-    return await fetch(buildUrl(path), {
+const httpGet = async (path, state, params) => {
+    return await fetch(buildUrl(path, params), {
         method: 'GET',
         headers: { Authorization: `Bearer ${state.user.authToken}` }
     })

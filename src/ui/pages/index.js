@@ -13,7 +13,6 @@ const components = {
 
 class Index extends Component {
     static getInitialProps({ reduxStore }) {
-        console.log('INDEX GET_INITIAL_PROPS; state: %o', reduxStore.getState())
         const user = reduxStore.getState().user
         return user ? components[user.role].getInitialProps({ reduxStore }) : {}
     }

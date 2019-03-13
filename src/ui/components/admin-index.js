@@ -4,7 +4,6 @@ import { fetchCustomers, fetchUsers } from '../state/actions'
 
 class AdminIndex extends React.Component {
     static async getInitialProps({ reduxStore }) {
-        console.log('ADMIN INDEX GET_INITIAL_PROPS; ')
         await reduxStore.dispatch(fetchCustomers())
         await reduxStore.dispatch(fetchUsers())
         return {}
