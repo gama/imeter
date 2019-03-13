@@ -27,6 +27,59 @@ test('customers/index', async () => {
     ].sort())
 })
 
+test('customers/index?filter', async () => {
+    const resp = await request(server).get('/api/customers?filter=vil')
+
+    expect(resp.status).toEqual(200)
+    expect(resp.body.customers).toHaveLength(2)
+    expect(resp.body.customers.map((u) => u.name).sort()).toEqual([
+        'Alphaville',
+        'Grand Olympus Village'
+    ].sort())
+})
+
+test('customers/index?sort=name', async () => {
+    const resp = await request(server).get('/api/customers?sort=name')
+
+    expect(resp.status).toEqual(200)
+    expect(resp.body.customers).toHaveLength(4)
+    expect(resp.body.customers.map((u) => u.name)).toEqual([
+        'Alphaville',
+        'Grand Olympus Village',
+        'Mrs. Bayard Residence Service',
+        'Park Royal Condo'
+    ])
+})
+
+test('customers/index?sort=-name', async () => {
+    const resp = await request(server).get('/api/customers?sort=-name')
+
+    expect(resp.status).toEqual(200)
+    expect(resp.body.customers).toHaveLength(4)
+    expect(resp.body.customers.map((u) => u.name)).toEqual([
+        'Park Royal Condo',
+        'Mrs. Bayard Residence Service',
+        'Grand Olympus Village',
+        'Alphaville'
+    ])
+})
+
+test('customers/index?page', async () => {
+    let resp = await request(server).get('/api/customers?sort=name&per_page=3&page=1')
+    expect(resp.status).toEqual(200)
+    expect(resp.body.customers).toHaveLength(3)
+    expect(resp.body.customers.map((u) => u.name)).toEqual([
+        'Alphaville',
+        'Grand Olympus Village',
+        'Mrs. Bayard Residence Service',
+    ])
+
+    resp = await request(server).get('/api/customers?sort=name&per_page=3&page=2')
+    expect(resp.status).toEqual(200)
+    expect(resp.body.customers).toHaveLength(1)
+    expect(resp.body.customers.map((u) => u.name)).toEqual(['Park Royal Condo'])
+})
+
 test('customers/show', async () => {
     const attrs = { name:  'Park Royal Condo' }
     const resp  = await request(server).get('/api/customers/13')

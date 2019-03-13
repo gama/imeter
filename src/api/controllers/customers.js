@@ -1,6 +1,7 @@
-const Router            = require('koa-router')
-const { getRepository } = require('typeorm')
-const { isAdmin }       = require('../auth')
+const Router                     = require('koa-router')
+const { getRepository }          = require('typeorm')
+const { isAdmin }                = require('../auth')
+const { filter, sort, paginate } = require('../typeorm-utils')
 
 module.exports = { mount, index, show, create, update, destroy }
 
@@ -19,8 +20,10 @@ function mount(parentRouter, prefix='/customers') {
 
 // ---------- endpoints ----------
 async function index(ctx) {
-    const customers = await Customers().find({})
-    ctx.body = { customers }
+    const attrs     = ['name']
+    const params    = Object.assign(filter(ctx, attrs), sort(ctx), paginate(ctx))
+    const customers = await Customers().find(params)
+    ctx.body        = { customers }
 }
 
 async function show(ctx) {

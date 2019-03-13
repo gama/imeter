@@ -26,6 +26,46 @@ test('users/index', async () => {
     expect(resp.body.users.every((u) => u.password === undefined)).toBe(true)
 })
 
+test('users/index?filter', async () => {
+    const resp = await request(server).get('/api/users?filter=il')
+
+    expect(resp.status).toEqual(200)
+    expect(resp.body.users).toHaveLength(2)
+    expect(resp.body.users.map((u) => `${u.firstName} ${u.lastName}`).sort()).toEqual([
+        'Emily Johnson',
+        'Peter Mills'
+    ].sort())
+})
+
+test('users/index?sort=asc', async () => {
+    let resp = await request(server).get('/api/users?sort=lastName')
+    expect(resp.status).toEqual(200)
+    expect(resp.body.users).toHaveLength(6)
+    expect(resp.body.users.map((u) => u.lastName)).toEqual([
+        '', 'Doe', 'Johnson', 'Mills', 'Smith', 'Taylor'
+    ])
+
+    resp = await request(server).get('/api/users?sort=-lastName')
+    expect(resp.status).toEqual(200)
+    expect(resp.body.users).toHaveLength(6)
+    expect(resp.body.users.map((u) => u.lastName)).toEqual([
+        'Taylor', 'Smith', 'Mills', 'Johnson', 'Doe', ''
+    ])
+})
+
+test('users/index?page', async () => {
+    let resp = await request(server).get('/api/users?sort=lastName&per_page=4')
+    expect(resp.status).toEqual(200)
+    expect(resp.body.users).toHaveLength(4)
+    expect(resp.body.users.map((u) => u.lastName)).toEqual(['', 'Doe', 'Johnson', 'Mills'])
+
+    resp = await request(server).get('/api/users?sort=lastName&per_page=4&page=2')
+    expect(resp.status).toEqual(200)
+    expect(resp.body.users).toHaveLength(2)
+    expect(resp.body.users.map((u) => u.lastName)).toEqual(['Smith', 'Taylor'])
+})
+
+
 test('users/show', async () => {
     const attrs = {
         id:         25,

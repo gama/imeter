@@ -1,4 +1,4 @@
-const typeorm = require('typeorm')  // { getConnectionManager, createConnection } = require('typeorm')
+const typeorm = require('typeorm')
 
 module.exports = { ensureConnection, getConnection, closeConnection, getRepository }
 
