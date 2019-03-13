@@ -89,10 +89,10 @@ export const fetchCustomers = (params) => async (dispatch, getState) => {
     }
 }
 
-export const fetchUsers = () => async (dispatch, getState) => {
+export const fetchUsers = (params) => async (dispatch, getState) => {
     try {
         dispatch({ type: actionTypes.FETCHING })
-        const response = await httpGet('/api/users', getState())
+        const response = await httpGet('/api/users', getState(), params)
         const data     = await response.json()
         if (!response.ok)
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})

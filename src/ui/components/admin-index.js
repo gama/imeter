@@ -4,8 +4,8 @@ import { fetchCustomers, fetchUsers } from '../state/actions'
 
 class AdminIndex extends React.Component {
     static async getInitialProps({ reduxStore }) {
-        await reduxStore.dispatch(fetchCustomers())
-        await reduxStore.dispatch(fetchUsers())
+        await reduxStore.dispatch(fetchCustomers({sort: '-id', per_page: 3}))
+        await reduxStore.dispatch(fetchUsers({sort: '-id', per_page: 3}))
         return {}
     }
 
