@@ -7,6 +7,7 @@ module.exports = {
     'database':    process.env.TYPEORM_DATABASE       || 'imeter',
     'synchronize': ['true', '1', 'on'].includes(process.env.TYPEORM_SYNCHRONIZE || 'false'),
     'logging':     ['true', '1', 'on'].includes(process.env.TYPEORM_LOGGING || 'false'),
+    'logger':      process.env.TYPEORM_LOGGER,
     'entities':    ['src/api/models/**/*.schema.js'],
     'migrations':  ['src/api/migrations/**/*.js'],
     'subscribers': ['src/api/subscriber/**/*.js'],
