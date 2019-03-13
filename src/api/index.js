@@ -13,7 +13,8 @@ let routes, allowedMethods
 function mount(app, prefix = undefined) {
     const initialMount = (!routes && !allowedMethods)
     if (initialMount) {
-        app.use(logger())
+        if (isDev)
+            app.use(logger())
         app.use(jsonErrors())
         app.use(bodyParser())
         app.use(auth.verifyJwt())
