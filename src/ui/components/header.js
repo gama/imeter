@@ -10,6 +10,10 @@ class Header extends React.Component {
         this.state = { active: false }
     }
 
+    componentWillReceiveProps(newProps) {
+        document.body.classList.toggle('is-fetching', newProps.fetching)
+    }
+
     activeClass() {
         return this.state.active ? ' is-active' : ''
     }
@@ -84,6 +88,6 @@ function UserDropdown({user, logout}) {
     )
 }
 
-const mapStateToProps = ({ user }) => ({ user })
+const mapStateToProps = ({ fetching, user }) => ({ fetching, user })
 const actions = { logout }
 export default connect(mapStateToProps, actions)(Header)
