@@ -1,6 +1,10 @@
-import React       from 'preact'
+import React from 'preact'
 
 class OperatorIndex extends React.Component {
+    static async getInitialProps(/*{ reduxStore }*/) {
+        return {}
+    }
+
     render() {
         return (
             <section className="section">

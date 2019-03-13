@@ -10,7 +10,6 @@ export default class LoginForm extends React.Component {
     }
 
     componentDidMount() {
-        console.log('COMPONENT DID MOUNT')
         this.password.current.value = ''
     }
 
