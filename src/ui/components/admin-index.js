@@ -11,7 +11,7 @@ class AdminIndex extends React.Component {
 
     render({ customers, users }) {
         return (
-            <section className="section">
+            <>
                 <h2 className="title">Customers & Users Management</h2>
                 <div className="columns">
                     <div className="column">
@@ -39,7 +39,7 @@ class AdminIndex extends React.Component {
                         </div>
                     </div>
                 </div>
-            </section>
+            </>
         )
     }
 }

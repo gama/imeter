@@ -1,5 +1,5 @@
 import React, { Component } from 'preact'
-import styles               from '../../styles/search.sass'
+import styles               from '../../styles/entity-table.sass'
 
 export default class SearchBox extends Component {
     constructor(props) {

@@ -1,26 +1,34 @@
 import React, { Component } from 'preact'
 import { connect }          from 'preact-redux'
-import Layout               from '../components/layout'
-import SearchBox            from '../components/crud/search'
-import EntityTable          from '../components/crud/table'
 import { fetchCustomers }   from '../state/actions'
-import styles               from '../styles/customers.sass'
+import Layout               from '../components/layout'
+import EntityTable          from '../components/crud/table'
+
+const DEFAULT_API_PARAMS = {filter: null, page: 1, per_page: 20}
 
 class Customers extends Component {
     static async getInitialProps({ reduxStore }) {
-        await reduxStore.dispatch(fetchCustomers())
+        await reduxStore.dispatch(fetchCustomers(DEFAULT_API_PARAMS))
     }
 
-    render({ fetching, customers, fetchCustomers }) {
+    onSearch(filter) {
+        this.setState({ filter, page: 1 }, () => this.props.dispatch(fetchCustomers(this.state)))
+    }
+
+    onPaginate(page) {
+        this.setState({ page }, () => this.props.dispatch(fetchCustomers(this.state)))
+    }
+
+    render({ fetching, customers }) {
         return (
             <Layout>
                 <h1 className="title">Customers</h1>
-                <div className="columns">
-                    <div className={'column ' + styles.indexcolumn}>
-                        <SearchBox onChange={(filter) => fetchCustomers({filter})} />
-                        <EntityTable overlayed={fetching} headers={['Name']} items={customers} itemComponent={Customer} />
-                    </div>
-                </div>
+                <div className="columns"><div className="column">
+                    <EntityTable
+                        overlayed={fetching} headers={['Name']} items={customers} itemComponent={Customer}
+                        onSearch={this.onSearch.bind(this)}
+                        onPaginate={this.onPaginate.bind(this)} />
+                </div></div>
             </Layout>
         )
     }
@@ -31,5 +39,4 @@ function Customer({ name }) {
 }
 
 const mapStateToProps = ({ fetching, customers }) => ({ fetching, customers })
-const actions = { fetchCustomers }
-export default connect(mapStateToProps, actions)(Customers)
+export default connect(mapStateToProps)(Customers)
