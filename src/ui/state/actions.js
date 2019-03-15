@@ -1,7 +1,7 @@
 import Router        from 'next/router'
 import fetch         from 'isomorphic-unfetch'
-import cookie        from 'component-cookie'
 import { stringify } from 'querystring'
+import { saveAuthToken, clearAuthToken } from '../lib/with-auth'
 
 export const actionTypes = {
     TICK:            'TICK',
@@ -48,7 +48,7 @@ export const login = (email, password, rememberMe, nextUrl) => async dispatch =>
             return dispatch({ type: actionTypes.FETCH_ERROR, error: data})
 
         dispatch({ type: actionTypes.LOGIN, ...data })
-        cookie('authToken', data.user.authToken, { expires: dateNDaysInTheFuture(30) })
+        saveAuthToken(data.user.authToken, rememberMe)
         Router.push(nextUrl || '/')
     } catch (error) {
         console.error('fetch failed: ', error)
@@ -66,7 +66,7 @@ export const logout = () => async dispatch => {
         }
 
         dispatch({ type: actionTypes.LOGOUT })
-        cookie('authToken', null)
+        clearAuthToken()
         Router.push('/login')
     } catch (error) {
         console.error('fetch failed: ', error)
@@ -133,6 +133,3 @@ const httpDelete = async (path) => {
     })
 }
 
-const dateNDaysInTheFuture = (numDays) => {
-    return new Date((new Date()).getTime() + (numDays * 24 * 60 * 60))
-}

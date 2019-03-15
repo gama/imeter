@@ -1,7 +1,19 @@
 import React        from 'preact'
 import Router       from 'next/router'
 import nextCookie   from 'next-cookies'
+import cookie       from 'component-cookie'
 import { buildUrl } from '../state/actions'
+
+const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000  // 30 days in ms
+
+export function saveAuthToken(authToken, remember) {
+    const params = remember ? { maxage: COOKIE_MAX_AGE } : undefined
+    cookie('authToken', authToken, params)
+}
+
+export function clearAuthToken() {
+    cookie('authToken', null)
+}
 
 export default function withAuth(App) {
     return class AppWithAuth extends React.Component {
