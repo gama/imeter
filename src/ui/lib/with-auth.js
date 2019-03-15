@@ -4,17 +4,6 @@ import nextCookie   from 'next-cookies'
 import cookie       from 'component-cookie'
 import { buildUrl } from '../state/actions'
 
-const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000  // 30 days in ms
-
-export function saveAuthToken(authToken, remember) {
-    const params = remember ? { maxage: COOKIE_MAX_AGE } : undefined
-    cookie('authToken', authToken, params)
-}
-
-export function clearAuthToken() {
-    cookie('authToken', null)
-}
-
 export default function withAuth(App) {
     return class AppWithAuth extends React.Component {
         static async getInitialProps(appContext) {
@@ -35,7 +24,7 @@ export default function withAuth(App) {
         }
 
         static isAuthenticated(context) {
-            return Boolean(context.reduxStore.getState().user)
+            return Boolean(context.reduxStore.getState().auth)
         }
 
         static async updateStateWithAuth(context) {
@@ -44,13 +33,13 @@ export default function withAuth(App) {
                 return
 
             const state = context.reduxStore.getState()
-            if (state.user && state.user.authToken === authToken)
+            if (state.auth && state.auth.user && state.auth.user.authToken === authToken)
                 return
 
             if (process.browser)
-                throw new Error('state.user should be set on SSR or by the login action')
+                throw new Error('state.auth.user should be set on SSR or by the login action')
 
-            Object.assign(state, { user: await this.fetchCurrentUser(context, authToken) })
+            Object.assign(state, { auth: { user: await this.fetchCurrentUser(context, authToken) } })
         }
 
         static async fetchCurrentUser(context, authToken) {
@@ -76,4 +65,15 @@ export default function withAuth(App) {
             return <App {...this.props} />
         }
     }
+}
+
+const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000  // 30 days in ms
+
+export function saveAuthToken(authToken, remember) {
+    const params = remember ? { maxage: COOKIE_MAX_AGE } : undefined
+    cookie('authToken', authToken, params)
+}
+
+export function clearAuthToken() {
+    cookie('authToken', null)
 }

@@ -14,8 +14,8 @@ const components = {
 
 class Index extends Component {
     static getInitialProps({ reduxStore }) {
-        const user = reduxStore.getState().user
-        return user ? components[user.role].getInitialProps({ reduxStore }) : {}
+        const auth = reduxStore.getState().auth
+        return auth && auth.user ? components[auth.user.role].getInitialProps({ reduxStore }) : {}
     }
 
     render({ user }) {
@@ -31,5 +31,5 @@ class Index extends Component {
     }
 }
 
-const mapStateToProps = ({ user }) => ({ user })
+const mapStateToProps = ({ auth }) => ({ user: auth && auth.user })
 export default connect(mapStateToProps)(Index)

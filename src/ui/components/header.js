@@ -88,6 +88,6 @@ function UserDropdown({user, logout}) {
     )
 }
 
-const mapStateToProps = ({ fetching, user }) => ({ fetching, user })
+const mapStateToProps = ({ fetching, auth }) => ({ fetching, user: auth && auth.user })
 const actions = { logout }
 export default connect(mapStateToProps, actions)(Header)

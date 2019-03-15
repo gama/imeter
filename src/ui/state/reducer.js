@@ -14,23 +14,25 @@ const reducer = (state = initialState, action) => {
 
     // BACKEND FETCH
     case actionTypes.FETCHING:
-        return Object.assign({}, state, { fetching: true,  error: undefined })
+        return Object.assign({}, state, { fetching: action.fetchId,  error: undefined })
     case actionTypes.FETCH_ERROR:
         return Object.assign({}, state, { fetching: false, error: action.error })
 
     case actionTypes.FETCH_CUSTOMERS:
-        console.log('FETCH CUSTOMERS')
         return Object.assign({}, state, { fetching: false, error: undefined, customers: action.customers })
     case actionTypes.FETCH_USERS:
-        console.log('FETCH USERS')
         return Object.assign({}, state, { fetching: false, error: undefined, users: action.users })
+    case actionTypes.FETCH_USER:
+        return Object.assign({}, state, { fetching: false, error: undefined, user: action.user })
+    case actionTypes.CLEAR_USER:
+        return Object.assign({}, state, { fetching: false, error: undefined, user: null })
 
     // AUTH
     case actionTypes.LOGIN:
         console.log('LOGGED IN: %o', action)
-        return Object.assign({}, state, { fetching: false, user: action.user })
+        return Object.assign({}, state, { fetching: false, auth: { user: action.user } })
     case actionTypes.LOGOUT:
-        return Object.assign({}, state, { fetching: false, user: null })
+        return Object.assign({}, state, { fetching: false, auth: null })
 
     default: return state
     }

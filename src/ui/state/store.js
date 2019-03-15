@@ -10,7 +10,7 @@ export const initialState = {
     light:      false,
     count:      0,
     fetching:   false,
-    user:       null
+    auth:       null
 }
 
 export function initializeStore(initialState = initialState) {

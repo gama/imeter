@@ -4,15 +4,18 @@ const bodyParser = require('koa-body')
 const chokidar   = require('chokidar')
 const path       = require('path')
 const auth       = require('./auth')
+const db         = require('./db')
 
 module.exports = {mount}
 
 const isDev = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test'
 let routes, allowedMethods
 
-function mount(app, prefix = undefined) {
+async function mount(app, prefix = undefined) {
     const initialMount = (!routes && !allowedMethods)
     if (initialMount) {
+        await db.ensureConnection()
+
         if (isDev)
             app.use(logger())
         app.use(jsonErrors())
