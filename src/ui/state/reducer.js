@@ -3,52 +3,48 @@ import { actionTypes }  from './actions'
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-    case actionTypes.TICK:
-        return Object.assign({}, state, { lastUpdate: action.ts, light: !!action.light })
-    case actionTypes.INCREMENT:
-        return Object.assign({}, state, { count: state.count + 1 })
-    case actionTypes.DECREMENT:
-        return Object.assign({}, state, { count: state.count - 1 })
-    case actionTypes.RESET:
-        return Object.assign({}, state, { count: initialState.count })
-
     // BACKEND FETCH
     case actionTypes.FETCHING:
-        return Object.assign({}, state, { fetching: action.id,  error: undefined })
+        return {...state, fetching: action.id,  error: undefined }
     case actionTypes.FETCH_ERROR:
-        return Object.assign({}, state, { fetching: false, error: action.error })
+        return {...state, fetching: false, error: action.error, notification: action.notification }
 
     // BACKEND SAVE
     case actionTypes.SAVING:
         return Object.assign({}, state, { saving: action.id,  error: undefined })
     case actionTypes.SAVE_ERROR:
-        return Object.assign({}, state, { saving: false, error: action.error })
+        return {...state, saving: false, error: action.error, notification: action.notification }
 
     // BACKEND DELETE
     case actionTypes.DELETING:
         return Object.assign({}, state, { deleting: action.id,  error: undefined })
     case actionTypes.DELETE_ERROR:
-        return Object.assign({}, state, { deleting: false, error: action.error })
+        return {...state, deleting: false, error: action.error, notification: action.notification }
 
     case actionTypes.FETCH_CUSTOMERS:
-        return Object.assign({}, state, { fetching: false, error: undefined, customers: action.customers })
+        return {...state, fetching: false, error: undefined, customers: action.customers }
     case actionTypes.FETCH_USERS:
-        return Object.assign({}, state, { fetching: false, error: undefined, users: action.users })
+        return {...state, fetching: false, error: undefined, users: action.users }
     case actionTypes.FETCH_USER:
-        return Object.assign({}, state, { fetching: false, error: undefined, user: action.user })
+        return {...state, fetching: false, error: undefined, user: action.user }
     case actionTypes.SAVE_USER:
-        return Object.assign({}, state, { saving: false, error: undefined, user: action.user })
+        return {...state, saving: false, error: undefined, user: action.user, notification: action.notification }
     case actionTypes.DELETE_USER:
-        return Object.assign({}, state, { deleting: false, error: undefined, deletedUser: action.userId })
+        return {...state,  deleting: false, error: undefined, deletedUser: action.userId, notification: action.notification }
     case actionTypes.CLEAR_USER:
-        return Object.assign({}, state, { fetching: false, error: undefined, user: null })
+        return {...state, fetching: false, error: undefined, user: null }
 
     // AUTH
     case actionTypes.LOGIN:
-        console.log('LOGGED IN: %o', action)
-        return Object.assign({}, state, { fetching: false, auth: { user: action.user } })
+        return {...state, fetching: false, auth: { user: action.user } }
     case actionTypes.LOGOUT:
-        return Object.assign({}, state, { fetching: false, auth: null })
+        return {...state, fetching: false, auth: null }
+
+    // NOTIFICATIONS
+    case actionTypes.SHOW_NOTIFICATION:
+        return {...state,  notification: action }
+    case actionTypes.HIDE_NOTIFICATION:
+        return {...state,  notification: null }
 
     default: return state
     }

@@ -46,12 +46,11 @@ async function update(ctx) {
     let user = await Users().findOne(ctx.params.id)
     ctx.assert(user, 404, 'user not found')
 
-    const attrs = {password: user.password, ...ctx.request.body.user}
+    const attrs = {...user, ...ctx.request.body.user}
     ctx.assert(Users().target.validate(attrs), 400, 'invalid user attributes')
-    await Users().update(user.id, attrs)
+    user = await Users().save(attrs)
 
-    ctx.status = 204
-    ctx.body   = null
+    ctx.body = {user: serialize(user)}
 }
 
 async function destroy(ctx) {

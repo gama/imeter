@@ -1,6 +1,7 @@
-import React       from 'preact'
-import Header      from './header'
-import Footer      from './footer'
+import React        from 'preact'
+import Header       from './header'
+import Footer       from './footer'
+import Notification from './notification'
 import '../styles/style.global.sass'
 
 function Layout(props) {
@@ -10,6 +11,7 @@ function Layout(props) {
             <section className="section main-content">
                 {props.children}
             </section>
+            <Notification />
             <Footer />
         </div>
     )

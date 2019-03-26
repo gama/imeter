@@ -9,8 +9,7 @@ export const initialState = {
     lastUpdate: 0,
     light:      false,
     count:      0,
-    fetching:   false,
-    auth:       null
+    fetching:   false
 }
 
 export function initializeStore(initialState = initialState) {
