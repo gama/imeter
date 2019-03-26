@@ -20,6 +20,7 @@ function mount(parentRouter, prefix = '/users') {
 
 // ---------- endpoints ----------
 async function index(ctx) {
+    await new Promise(resolve => setTimeout(resolve, 250))
     const attrs  = ['firstName', 'lastName']
     const params = Object.assign(filter(ctx, attrs), sort(ctx), paginate(ctx))
     const users  = await Users().find(params)
@@ -45,7 +46,7 @@ async function update(ctx) {
     let user = await Users().findOne(ctx.params.id)
     ctx.assert(user, 404, 'user not found')
 
-    const attrs = ctx.request.body.user
+    const attrs = {password: user.password, ...ctx.request.body.user}
     ctx.assert(Users().target.validate(attrs), 400, 'invalid user attributes')
     await Users().update(user.id, attrs)
 

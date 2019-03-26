@@ -19,11 +19,12 @@ async function mount(server) {
 }
 
 function createRouter(app, handler) {
-    const render = (path) => async (ctx) => app.render(ctx.req, ctx.res, path, ctx.params)
+    const render = (path, params = {}) => async (ctx) => app.render(ctx.req, ctx.res, path, {...ctx.params, ...params})
 
     return new Router().
-        get('/users/:id',            render('/users')).
-        get('/users/:id/:operation', render('/users')).
+        get('/users/new',         render('/users', {action: 'new'})).
+        get('/users/:id',         render('/users')).
+        get('/users/:id/:action', render('/users')).
 
         get('*', async (ctx) => {
             handler(ctx.req, ctx.res)

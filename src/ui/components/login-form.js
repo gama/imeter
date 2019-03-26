@@ -44,7 +44,7 @@ function EmailInput(props) {
             <div className="control has-icons-left">
                 <input name="email" type="input" className="input" ref={props.refp} />
                 <span className="icon is-small is-left">
-                    <i className="fa fa-user"></i>
+                    <i className="mdi mdi-account"></i>
                 </span>
             </div>
         </div>
@@ -57,7 +57,7 @@ function PasswordInput(props) {
             <label htmlFor="password" className="label">Password</label>
             <div className="control has-icons-left">
                 <input name="password" type="password" className="input" ref={props.refp} />
-                <span className="icon is-left"><i className="fa fa-lock"></i></span>
+                <span className="icon is-left"><i className="mdi mdi-lock"></i></span>
             </div>
         </div>
     )
@@ -80,7 +80,7 @@ function SubmitButton(props) {
             <div className="control">
                 <button name="submit" className="button is-link" onClick={props.onSubmit}>
                     <span className="icon is-left">
-                        <i className="fa fa-check"></i>
+                        <i className="mdi mdi-check-bold"></i>
                     </span>
                     <span>Submit</span>
                 </button>

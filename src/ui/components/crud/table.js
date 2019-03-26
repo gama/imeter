@@ -1,7 +1,7 @@
 import React      from 'preact'
 import Pagination from './pagination'
 import SearchBox  from './search'
-import styles     from '../../styles/entity-table.sass'
+import styles     from '../../styles/crud/table.sass'
 
 export default function EntityTable(props) {
     const {

@@ -58,10 +58,10 @@ function NavbarMenu({ activeClass, user, logout }) {
     return (
         <div id="menu" className={'navbar-menu' + activeClass}>
             <div className="navbar-end">
-                {user.role === 'customer' && <Link href="/meters"   ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-tachometer" />Meters</a   ></Link>}
-                {user.role === 'customer' && <Link href="/reports"  ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-bar-chart"  />Reports</a  ></Link>}
-                {user.role === 'admin'    && <Link href="/customers"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-handshake-o"/>Customers</a></Link>}
-                {user.role === 'admin'    && <Link href="/users"    ><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-users"      />Users</a    ></Link>}
+                {user.role === 'customer' && <Link href="/meters"   ><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-gauge"            />Meters</a   ></Link>}
+                {user.role === 'customer' && <Link href="/reports"  ><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-chart-bar"        />Reports</a  ></Link>}
+                {user.role === 'admin'    && <Link href="/customers"><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-currency-usd"     />Customers</a></Link>}
+                {user.role === 'admin'    && <Link href="/users"    ><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-account-multiple" />Users</a    ></Link>}
                 <Link href="/about"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-question-circle" />About</a></Link>
                 {user && <UserDropdown {...{user, logout}} /> }
             </div>
@@ -77,12 +77,12 @@ function UserDropdown({user, logout}) {
 
     return (
         <div className={style.navbaritem + ' navbar-item has-dropdown is-hoverable'}>
-            <a className={style.dropdownlink + ' navbar-link is-arrowless'}><i className="fa fa-user-circle" /></a>
+            <a className={style.dropdownlink + ' navbar-link is-arrowless'}><i className="mdi mdi-account-circle" /></a>
 
             <div className="navbar-dropdown is-right">
                 <div className={style.navbaritem + ' navbar-item'}>{user.firstName}</div>
                 <hr className="navbar-divider" />
-                <Link href="/logout" ><a className={style.navbaritem + ' navbar-item'} onClick={logoutClicked}><i className="fa fa-sign-out" />Logout</a></Link>
+                <Link href="/logout" ><a className={style.navbaritem + ' navbar-item'} onClick={logoutClicked}><i className="mdi mdi-exit-to-app" />Logout</a></Link>
             </div>
         </div>
     )

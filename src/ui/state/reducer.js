@@ -14,9 +14,21 @@ const reducer = (state = initialState, action) => {
 
     // BACKEND FETCH
     case actionTypes.FETCHING:
-        return Object.assign({}, state, { fetching: action.fetchId,  error: undefined })
+        return Object.assign({}, state, { fetching: action.id,  error: undefined })
     case actionTypes.FETCH_ERROR:
         return Object.assign({}, state, { fetching: false, error: action.error })
+
+    // BACKEND SAVE
+    case actionTypes.SAVING:
+        return Object.assign({}, state, { saving: action.id,  error: undefined })
+    case actionTypes.SAVE_ERROR:
+        return Object.assign({}, state, { saving: false, error: action.error })
+
+    // BACKEND DELETE
+    case actionTypes.DELETING:
+        return Object.assign({}, state, { deleting: action.id,  error: undefined })
+    case actionTypes.DELETE_ERROR:
+        return Object.assign({}, state, { deleting: false, error: action.error })
 
     case actionTypes.FETCH_CUSTOMERS:
         return Object.assign({}, state, { fetching: false, error: undefined, customers: action.customers })
@@ -24,6 +36,10 @@ const reducer = (state = initialState, action) => {
         return Object.assign({}, state, { fetching: false, error: undefined, users: action.users })
     case actionTypes.FETCH_USER:
         return Object.assign({}, state, { fetching: false, error: undefined, user: action.user })
+    case actionTypes.SAVE_USER:
+        return Object.assign({}, state, { saving: false, error: undefined, user: action.user })
+    case actionTypes.DELETE_USER:
+        return Object.assign({}, state, { deleting: false, error: undefined, deletedUser: action.userId })
     case actionTypes.CLEAR_USER:
         return Object.assign({}, state, { fetching: false, error: undefined, user: null })
 

@@ -20,6 +20,7 @@ function mount(parentRouter, prefix='/customers') {
 
 // ---------- endpoints ----------
 async function index(ctx) {
+    await new Promise(resolve => setTimeout(resolve, 250))
     const attrs     = ['name']
     const params    = Object.assign(filter(ctx, attrs), sort(ctx), paginate(ctx))
     const customers = await Customers().find(params)

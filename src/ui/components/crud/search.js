@@ -1,5 +1,5 @@
 import React, { Component } from 'preact'
-import styles               from '../../styles/entity-table.sass'
+import styles               from '../../styles/crud/table.sass'
 
 export default class SearchBox extends Component {
     constructor(props) {
@@ -32,7 +32,7 @@ export default class SearchBox extends Component {
             <div className={'is-pulled-right field ' + styles.searchbox}>
                 <div className="control has-icons-right">
                     <input className="input is-rounded" placeholder="Search" onKeyUp={this.delayedOnChange.bind(this)} ref={this.input} />
-                    <span className="icon is-small is-right"><i className="fa fa-search"></i></span>
+                    <span className="icon is-small is-right"><i className="mdi mdi-magnify"></i></span>
                 </div>
             </div>
         )

@@ -1,14 +1,20 @@
 @charset "utf-8";
 
 @import "./variables.global"
-@import "./fontawesome.global"
 @import "../../../node_modules/bulma/bulma"
 
 body.is-fetching
-    cursor: progress
+  cursor: progress
 
 .main-container
   height: 100vh
 
 .is-link
   cursor: pointer
+
+body .mdi::before
+  font-size: 19px
+
+select:-moz-focusring
+    color: transparent;
+    text-shadow: 0 0 0 #000;
