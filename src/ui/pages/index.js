@@ -1,7 +1,6 @@
 import React, { Component } from 'preact'
 import { connect }          from 'preact-redux'
 import Router               from 'next/router'
-import Layout               from '../components/layout'
 import AdminIndex           from '../components/admin-index'
 import CustomerIndex        from '../components/customer-index'
 import OperatorIndex        from '../components/operator-index'
@@ -23,11 +22,7 @@ class Index extends Component {
             return Router.push('/login')
 
         const Component = components[user.role]
-        return (
-            <Layout>
-                <Component />
-            </Layout>
-        )
+        return <Component />
     }
 }
 

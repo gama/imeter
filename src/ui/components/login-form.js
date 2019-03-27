@@ -80,7 +80,7 @@ function SubmitButton(props) {
             <div className="control">
                 <button name="submit" className="button is-link" onClick={props.onSubmit}>
                     <span className="icon is-left">
-                        <i className="mdi mdi-check-bold"></i>
+                        <i className="mdi mdi-check"></i>
                     </span>
                     <span>Submit</span>
                 </button>

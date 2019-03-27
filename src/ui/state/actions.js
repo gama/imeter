@@ -103,9 +103,9 @@ export const fetchUser = (id) => async (dispatch, getState) => {
     }
 }
 
-export const createUser = (attrs) => async (dispatch, getState) => {
+export const createUser = (attrs, redirectParams) => async (dispatch, getState) => {
     dispatch({ type: actionTypes.SAVING, id: 'user' })
-    const userAttrs = _.pick(attrs, ['firstName', 'lastName', 'email', 'role'])
+    const userAttrs = _.pick(attrs, ['firstName', 'lastName', 'email', 'password', 'role'])
 
     try {
         const response  = await httpPost('/api/users', getState(), {user: userAttrs})
@@ -114,14 +114,14 @@ export const createUser = (attrs) => async (dispatch, getState) => {
             throw data
 
         dispatch({ type: actionTypes.SAVE_USER, ...data, ...successNotification(`User ${attrs.id} created successfully`) })
-        Router.push(`/users?id=${data.user.id}`, `/users/${data.user.id}`)
+        Router.push(buildUrl('/users', {...redirectParams, id: data.user.id}, ''), '/users/' + data.user.id)
     } catch (error) {
         console.error('create user failed: ', error)
         dispatch({ type: actionTypes.SAVE_ERROR, error, ...errorNotification(`Unable to create user ${attrs.id}: ${error}`) })
     }
 }
 
-export const updateUser = (attrs) => async (dispatch, getState) => {
+export const updateUser = (attrs, redirectParams) => async (dispatch, getState) => {
     dispatch({ type: actionTypes.SAVING, id: 'user' })
     attrs.password  = attrs.password.trim() || undefined
     const userAttrs = _.pick(attrs, ['firstName', 'lastName', 'email', 'password', 'role'])
@@ -133,14 +133,14 @@ export const updateUser = (attrs) => async (dispatch, getState) => {
             throw data
 
         dispatch({ type: actionTypes.SAVE_USER, ...data, ...successNotification(`User ${attrs.id} updated successfully`) })
-        Router.push(`/users?id=${attrs.id}`, `/users/${attrs.id}`)
+        Router.push(buildUrl('/users', {...redirectParams, id: attrs.id}, ''), '/users/' + attrs.id)
     } catch (error) {
         console.error('update user failed: %o', error.error || error)
         dispatch({ type: actionTypes.SAVE_ERROR, error, ...errorNotification(`Unable to update user ${attrs.id}: ${error.error || error}`) })
     }
 }
 
-export const deleteUser = (id) => async (dispatch, getState) => {
+export const deleteUser = (id, redirectParams) => async (dispatch, getState) => {
     try {
         dispatch({ type: actionTypes.DELETING, id: 'user' })
         const response = await httpDelete(`/api/users/${id}`, getState())
@@ -148,7 +148,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
             throw await response.json()
 
         dispatch({ type: actionTypes.DELETE_USER, ...successNotification(`Deleted user ${id} successfully`) })
-        Router.push('/users')
+        Router.push(buildUrl('/users', redirectParams, ''), '/users')
     } catch (error) {
         console.error('delete user failed: ', error)
         dispatch({ type: actionTypes.DELETE_ERROR, error: error, ...errorNotification(`Unable to delete user ${id}: ${error}`) })
@@ -169,8 +169,9 @@ export const hideNotification = () => async (dispatch) => {
 
 // -------------------------------------------------------------------
 
-export const buildUrl = (path, params) => {
-    const prefix = typeof(window) === 'undefined' ? process.env.IVMETER_API_URL : ''
+export const buildUrl = (path, params, prefix) => {
+    if (prefix === undefined)
+        prefix = typeof(window) === 'undefined' ? process.env.IVMETER_API_URL : ''
     return prefix + path + (params ? `?${stringify(params)}` : '')
 }
 
@@ -187,7 +188,7 @@ const httpPost = async (path, state, params) => {
         body:    JSON.stringify(params),
         headers: {
             'Content-Type':  'application/json',
-            'Authorization': `Bearer ${state.auth.user.authToken}`
+            'Authorization': `Bearer ${state.auth && state.auth.user.authToken}`
         }
     })
 }

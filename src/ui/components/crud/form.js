@@ -88,7 +88,7 @@ export const Field = (props) => (
 
 export const Select = (props) => (
     <div className="select is-fullwidth">
-        <select name="role" ref={props.refp}>
+        <select name={props.name} ref={props.refp}>
             <option disabled selected={!props.selected}></option>
             {props.options.map((o) => (
                 <option key={o.value} value={o.value} selected={o.value === props.selected}>{o.label}</option>

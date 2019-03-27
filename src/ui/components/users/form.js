@@ -32,7 +32,7 @@ export default function UserForm({ id, firstName, lastName, email, role, onSave}
                     <input ref={passwordRef} type="password" name="password" value="" className="input is-fullwidth" />
                 </Field>
                 <Field name="role" label="Role">
-                    <Select refp={roleRef} selected={role} options={['admin', 'customer', 'operator'].map(o => ({label: o, value: capitalize(o)}))} />
+                    <Select refp={roleRef} name="role" selected={role} options={['admin', 'customer', 'operator'].map(o => ({value: o, label: capitalize(o)}))} />
                 </Field>
             </Card>
         </div>

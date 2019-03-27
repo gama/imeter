@@ -1,7 +1,6 @@
 import React, { Component } from 'preact'
 import { connect }          from 'preact-redux'
 import { fetchCustomers }   from '../state/actions'
-import Layout               from '../components/layout'
 import EntityTable          from '../components/crud/table'
 
 const DEFAULT_API_PARAMS = {filter: null, page: 1, per_page: 20}
@@ -21,7 +20,7 @@ class Customers extends Component {
 
     render({ fetching, customers }) {
         return (
-            <Layout>
+            <span>
                 <h1 className="title">Customers</h1>
                 <div className="columns"><div className="column">
                     <EntityTable
@@ -29,7 +28,7 @@ class Customers extends Component {
                         onSearch={this.onSearch.bind(this)}
                         onPaginate={this.onPaginate.bind(this)} />
                 </div></div>
-            </Layout>
+            </span>
         )
     }
 }

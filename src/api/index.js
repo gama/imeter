@@ -17,7 +17,10 @@ async function mount(app, prefix = undefined) {
         await db.ensureConnection()
 
         if (isDev)
-            app.use(logger())
+            app.use(logger((str, args) => {
+                if (!args[2].includes('/on-demand-entries-ping'))
+                    console.log(...args)
+            }))
         app.use(jsonErrors())
         app.use(bodyParser())
         app.use(auth.verifyJwt())

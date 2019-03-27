@@ -1,14 +1,11 @@
-import React  from 'preact'
-import Layout from '../components/layout'
+import React, { Component } from 'preact'
 
-export default function About() {
-    // static getInitialProps({}) {
-    //     return {}
-    // }
+export default class About extends Component {
+    static async getInitialProps() {
+        return {}
+    }
 
-    return (
-        <Layout>
-            <h3>About</h3>
-        </Layout>
-    )
+    render() {
+        return (<h3>About</h3>)
+    }
 }

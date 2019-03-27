@@ -2,7 +2,8 @@ import React           from 'preact'
 import { Card, Field } from '../crud/form'
 import styles          from '../../styles/users/form.sass'
 
-export default function UserDetails({ id, firstName, lastName, email, role, onDelete }) {
+export default function UserDetails(props) {
+    const { id='', firstName='', lastName='', email='', role='', onDelete } = props
     return (
         <div className="column is-two-fifths">
             <Card name="user" url="/users" id={id} mode="view" styles={styles}

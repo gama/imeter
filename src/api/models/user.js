@@ -16,10 +16,10 @@ class User {
         return v8n().schema({
             id:         v8n().optional(v8n().number()),
             customerId: v8n().optional(v8n().number()),
-            email:      v8n().string().maxLength(256),
-            password:   v8n().string().maxLength(256),
-            firstName:  v8n().string().maxLength(64),
-            lastName:   v8n().string().maxLength(64),
+            email:      v8n().string().minLength(3).maxLength(256),
+            password:   v8n().string().minLength(4).maxLength(64),
+            firstName:  v8n().string().minLength(1).maxLength(64),
+            lastName:   v8n().string().minLength(1).maxLength(64),
             role:       v8n().string(),
             authToken:  v8n().optional(v8n().string().minLength(32))
         }).test(attrs)

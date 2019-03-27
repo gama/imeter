@@ -1,6 +1,7 @@
 import React                  from 'preact'
 import NextApp, { Container } from 'next/app'
 import { Provider }           from 'preact-redux'
+import Layout                 from '../components/layout'
 import withReduxStore         from '../lib/with-redux-store'
 import withAuth               from '../lib/with-auth'
 
@@ -19,7 +20,9 @@ class App extends NextApp {
         return (
             <Container>
                 <Provider store={reduxStore}>
-                    <Component {...pageProps} />
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
                 </Provider>
             </Container>
         )

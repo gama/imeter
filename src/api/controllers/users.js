@@ -27,7 +27,9 @@ async function index(ctx) {
     ctx.body = {users: users.map(serialize)}
 }
 
+
 async function show(ctx) {
+    await new Promise(resolve => setTimeout(resolve, 350))
     const user = await Users().findOne(ctx.params.id)
     ctx.assert(user, 404, 'user not found')
     ctx.body = {user: serialize(user)}
