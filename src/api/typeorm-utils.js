@@ -19,7 +19,7 @@ function filter(ctx, attrs) {
 function sort(ctx) {
     const sort = ctx.query.sort ? ctx.query.sort.trim() : undefined
     if (!sort)
-        return {}
+        return { order: { id: 'DESC' } }
     const [attr, direction] = (sort[0] === '-') ? [sort.slice(1), 'DESC'] : [sort, 'ASC']
     return { order: { [attr]: direction } }
 }

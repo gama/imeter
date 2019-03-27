@@ -5,22 +5,22 @@ import styles     from '../../styles/crud/table.sass'
 
 export default function EntityTable(props) {
     const {
-        overlayed, headers, items, itemComponent,
-        pagination=true, page=1, perPage, onPaginate,
-        search=true, onSearch
+        overlayed, headers, items, itemComponent, pagination=true, page=1,
+        perPage, onPaginate, search=true, onSearch, styles:pstyles = {}
     } = props
-    const numCols = headers.length
+    const numCols    = headers.length
+    const enablePrev = !overlayed && page > 1
+    const enableNext = !overlayed && items.length >= (perPage || Number.MAX_VALUE)
 
     return (
         <div className={styles.container}>
             <div className={styles.search_pagination_container}>
-                {pagination && <Pagination onPaginate={onPaginate.bind(this)} current={page}
-                    disablePrev={page === 1} disableNext={items.length < (perPage || Number.MAX_VALUE)} />}
-                {search && <SearchBox onChange={onSearch.bind(this)} />}
+                {pagination && <Pagination {...{ current: page, enablePrev, enableNext, onPaginate, onSearch }} />}
+                {search && <SearchBox onChange={onSearch} />}
             </div>
-            <table className={'table is-striped is-fullwidth ' + (overlayed ? styles.overlayed : '')}>
+            <table className={`table is-striped is-fullwidth ${overlayed ? styles.overlayed : ''} ${pstyles.table || ''}`}>
                 <TableHeader headers={headers} />
-                <TableBody numCols={numCols} items={items} itemComponent={itemComponent} />
+                <TableBody   numCols={numCols} items={items} itemComponent={itemComponent} />
                 <TableFooter numCols={numCols} />
             </table>
         </div>

@@ -1,7 +1,6 @@
 import React, { Component } from 'preact'
 import { connect }          from 'preact-redux'
 import { withRouter }       from 'next/router'
-import Link                 from 'next/link'
 import { pick }             from 'lodash'
 import { fetchUser  }       from '../state/actions'
 import { fetchUsers }       from '../state/actions'
@@ -9,22 +8,20 @@ import { clearUser  }       from '../state/actions'
 import { createUser }       from '../state/actions'
 import { updateUser }       from '../state/actions'
 import { deleteUser }       from '../state/actions'
-import EntityTable          from '../components/crud/table'
+import UserTable            from '../components/users/table'
 import UserDetails          from '../components/users/details'
 import UserForm             from '../components/users/form'
 
 const DEFAULT_API_PARAMS = { filter: null, page: 1, per_page: 4 }
 
 class Users extends Component {
-    static async getInitialProps({ reduxStore, asPath, pathname, query }) {
-        console.log('USER PAGE GET_INITIAL_PROPS (pathname: %s, asPath: %s, query: %o)', pathname, asPath, query)
+    static async getInitialProps({ reduxStore, query }) {
         await reduxStore.dispatch(fetchUsers({ ...DEFAULT_API_PARAMS, ...query }))
         if (query.id)
             await reduxStore.dispatch(fetchUser(query.id))
     }
 
     constructor(props) {
-        console.log('USER PAGE CONSTRUCTOR')
         super(props)
 
         this.onSearch   = this.onSearch.bind(this)
@@ -37,7 +34,6 @@ class Users extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        console.log('USER PAGE WILL RECEIVE PROPS')
         if (this.props.router.query.id !== newProps.router.query.id) {
             if (newProps.router.query.id)
                 newProps.dispatch(fetchUser(newProps.router.query.id))
@@ -67,18 +63,13 @@ class Users extends Component {
         return pick(this.state, ['page', 'per_page', 'filter'])
     }
 
-    render({ fetching, user, users, router }) {
+    render({ fetching, user, users, router }, {page, per_page}) {
         return (
             <span>
                 <h1 className="title">Users</h1>
                 <div className="columns">
-                    <div className="column">
-                        <EntityTable overlayed={fetching === 'users'} headers={['Name', 'Email']}
-                            items={users} itemComponent={User}
-                            page={this.state.page} perPage={this.state.per_page} onPaginate={this.onPaginate}
-                            onSearch={this.onSearch} />
-                        <NewButton />
-                    </div>
+                    <ListColumn fetching={fetching} users={users} page={page} perPage={per_page}
+                        onPaginate={this.onPaginate} onSearch={this.onSearch} />
                     <DetailsColumn userId={router.query.id} action={router.query.action} user={user}
                         onSave={this.onSave} onDelete={this.onDelete} />
                 </div>
@@ -87,33 +78,17 @@ class Users extends Component {
     }
 }
 
-function DetailsColumn({ userId, action, user, onSave, onDelete }) {
+const ListColumn = (props) => (
+    <div className="column">
+        <UserTable {...props} />
+    </div>
+)
+
+const DetailsColumn = ({ userId, action, user, onSave, onDelete }) => {
     if (action === 'new' || action === 'edit')
-        return <UserForm    onSave={onSave}     {...user} />
+        return <div className="column is-two-fifths"><UserForm onSave={onSave} {...user} /></div>
     if (userId)
-        return <UserDetails onDelete={onDelete} {...user} />
-}
-
-function User({ id, firstName, lastName, email }) {
-    return (
-        <Link href={`/users?id=${id}`} as={`/users/${id}`} shallow={true}>
-            <tr className='is-link'>
-                <td>{`${firstName} ${lastName}`}</td>
-                <td>{email}</td>
-            </tr>
-        </Link>
-    )
-}
-
-function NewButton() {
-    return (
-        <Link href="/users?action=new" as="/users/new" shallow={true}>
-            <a className="button is-primary">
-                <span className="icon is-small is-pulled-right"><i className="mdi mdi-plus"></i></span>
-                <span>New User</span>
-            </a>
-        </Link>
-    )
+        return <div className="column is-two-fifths"><UserDetails onDelete={onDelete} {...user} /></div>
 }
 
 const mapStateToProps = ({ fetching, users, user }) => ({ fetching, users, user })

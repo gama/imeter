@@ -53,8 +53,8 @@ export const CloseButton = ({ url }) => (
     </Link>
 )
 
-export const CancelButton = ({ onCancel }) => (
-    <a className="button is-fullwidth" aria-label="close" onClick={onCancel || (() => Router.back())}>
+export const CancelButton = ({ id, onCancel }) => (
+    <a className="button is-fullwidth" aria-label="close" onClick={onCancel || (() => Router.push(...returnTo(id)))}>
         <span className="icon">
             <i className="mdi mdi-cancel" aria-hidden="true"></i>
         </span>
@@ -120,4 +120,8 @@ const FooterActions = (props) => (
             {props.buttons.includes('cancel') && <CancelButton {...props} />}
             {props.buttons.includes('save')   && <SaveButton   {...props} />}
         </div>
+)
+
+const returnTo = (id) => (
+    [`/users${id && `?id=${id}` || ''}`, `/users${id && `/${id}` || ''}`, {shallow: true}]
 )

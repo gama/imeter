@@ -58,15 +58,19 @@ function NavbarMenu({ activeClass, user, logout }) {
     return (
         <div id="menu" className={'navbar-menu' + activeClass}>
             <div className="navbar-end">
-                {user.role === 'customer' && <Link href="/meters"   ><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-gauge"            />Meters</a   ></Link>}
-                {user.role === 'customer' && <Link href="/reports"  ><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-chart-bar"        />Reports</a  ></Link>}
-                {user.role === 'admin'    && <Link href="/customers"><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-currency-usd"     />Customers</a></Link>}
-                {user.role === 'admin'    && <Link href="/users"    ><a className={style.navbaritem + ' navbar-item'}><i className="mdi mdi-account-multiple" />Users</a    ></Link>}
-                <Link href="/about"><a className={style.navbaritem + ' navbar-item'}><i className="fa fa-question-circle" />About</a></Link>
+                {user.role === 'customer' && <MenuLink href="/meters"    icon="gauge" label="Meters" />}
+                {user.role === 'customer' && <MenuLink href="/reports"   icon="chart-bar" label="Reports" />}
+                {user.role === 'admin'    && <MenuLink href="/customers" icon="currency-usd" label="Customers" />}
+                {user.role === 'admin'    && <MenuLink href="/users"     icon="account-multiple" label="Users" />}
+                <MenuLink href="/about" icon="question" label="About" />
                 {user && <UserDropdown {...{user, logout}} /> }
             </div>
         </div>
     )
+}
+
+function MenuLink({ href, icon, label }) {
+    return <Link href={href} shallow={true}><a className={style.navbaritem + ' navbar-item'}><i className={'mdi mdi-' + icon} />{label}</a></Link>
 }
 
 function UserDropdown({user, logout}) {
