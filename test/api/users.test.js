@@ -2,6 +2,7 @@
 
 const request             = require('supertest')
 const db                  = require('../../src/api/db')
+const { omit }            = require('lodash')
 const { loadAllFixtures } = require('../data/seed')
 const mocks               = require('./mocks')
     
@@ -10,8 +11,9 @@ const app    = require('./server')
 const server = app.callback()
 
 let Users
+beforeAll(async () => app.init())
+afterAll(async  () => app.finish())
 beforeAll(async () => Users = await db.getRepository('User'))
-afterAll(async  () => db.closeConnection())
 afterEach(async () => await loadAllFixtures())
 
 
@@ -116,8 +118,27 @@ test('users/update', async () => {
         .put('/api/users/25')
         .send({user: attrs})
 
-    expect(resp.status).toEqual(204)
-    expect(resp.body).toEqual({})
+    expect(resp.status).toEqual(200)
+    expect(resp.body.user).toMatchObject(omit(attrs, ['password']))
+    expect(await Users.count({})).toEqual(6)
+    expect(await Users.findOne({firstName: 'Emily'})).toBeUndefined()
+    expect(await Users.findOne(25)).toMatchObject(attrs)
+})
+
+test('users/update without password', async () => {
+    const attrs = {
+        'email':     'edited@example.com',
+        'firstName': 'Edited',
+        'lastName':  'User',
+        'role':      'operator'
+    }
+
+    const resp = await request(server)
+        .put('/api/users/25')
+        .send({user: attrs})
+
+    expect(resp.status).toEqual(200)
+    expect(resp.body.user).toMatchObject(attrs)
     expect(await Users.count({})).toEqual(6)
     expect(await Users.findOne({firstName: 'Emily'})).toBeUndefined()
     expect(await Users.findOne(25)).toMatchObject(attrs)

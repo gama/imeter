@@ -10,8 +10,8 @@ const app    = require('./server')
 const server = app.callback()
 
 let Customers
-beforeAll(async () => Customers = await db.getRepository('Customer'))
-afterAll(async  () => db.closeConnection())
+beforeAll(async () => { await app.init(); Customers = await db.getRepository('Customer') })
+afterAll(async  () => await app.finish())
 afterEach(async () => await loadAllFixtures())
 
 test('customers/index', async () => {
@@ -108,8 +108,8 @@ test('customers/update', async () => {
         .put('/api/customers/13')
         .send({customer: attrs})
 
-    expect(resp.status).toEqual(204)
-    expect(resp.body).toEqual({})
+    expect(resp.status).toEqual(200)
+    expect(resp.body.customer).toMatchObject(attrs)
     expect(await Customers.count({})).toEqual(4)
     expect(await Customers.findOne({name: 'Park Royal Condo'})).toBeUndefined()
     expect(await Customers.findOne(13)).toMatchObject(attrs)

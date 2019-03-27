@@ -6,7 +6,7 @@ const path       = require('path')
 const auth       = require('./auth')
 const db         = require('./db')
 
-module.exports = {mount}
+module.exports = {mount, unmount}
 
 const isDev = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test'
 let routes, allowedMethods
@@ -35,6 +35,10 @@ async function mount(app, prefix = undefined) {
 
     if (isDev && !initialMount)
         app.recompose()
+}
+
+async function unmount(/*app*/) {
+    await db.closeConnection()
 }
 
 function createRouter(prefix) {

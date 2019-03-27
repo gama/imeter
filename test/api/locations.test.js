@@ -10,6 +10,12 @@ mocks.mock('authMiddleware', 'config')
 const app    = require('./server')
 const server = app.callback()
 
+let Locations
+beforeAll(async () => app.init())
+afterAll(async  () => app.finish())
+beforeAll(async () => Locations = await db.getRepository('Location'))
+afterEach(async () => await loadAllFixtures())
+
 describe('logged in as customer', () => {
     beforeAll(() => loginAs('Emily'))
 
@@ -53,8 +59,8 @@ describe('logged in as customer', () => {
             .put('/api/locations/35')
             .send({location: attrs})
 
-        expect(resp.status).toEqual(204)
-        expect(resp.body).toEqual({})
+        expect(resp.status).toEqual(200)
+        expect(resp.body.location).toMatchObject(attrs)
         expect(await Locations.count({})).toEqual(10)
         expect(await Locations.findOne({name: 'Apartment 102'})).toBeUndefined()
         expect(await Locations.findOne(35)).toMatchObject(attrs)
@@ -149,19 +155,4 @@ describe('logged in as admin', () => {
         expect(await Locations.count({})).toEqual(11)
         expect(await Locations.findOne({order: {id: 'DESC'}})).toMatchObject(expected)
     })
-})
-
-// ----- fixtures, helpers, setup & teardown ----
-let Locations
-beforeAll(async () => Locations = await db.getRepository('Location'))
-afterAll(async  () => db.closeConnection())
-afterEach(async () => {
-    // await (await db.getRepository('Measurement')).clear()
-    // await (await db.getRepository('Meter')).clear()
-    // await (await db.getRepository('Location')).clear()
-    // await (await db.getRepository('User')).clear()
-    // await (await db.getRepository('Customer')).clear()
-    // await loadFixtures('locations')
-    // await loadFixtures('meters')
-    await loadAllFixtures()
 })

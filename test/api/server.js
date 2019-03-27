@@ -1,10 +1,10 @@
 process.env.NODE_ENV = 'test'
 
-// const http = require('http')
 const Koa  = require('../../src/lib/koa-recomposable')
 const Api  = require('../../src/api')
 
-const app = new Koa()
-Api.mount(app, '/api')
+const app  = new Koa()
+app.init   = async () => await Api.mount(app, '/api')
+app.finish = async () => await Api.unmount(app)
 
 module.exports = app

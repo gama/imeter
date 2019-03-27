@@ -20,7 +20,7 @@ function mount(parentRouter, prefix='/customers') {
 
 // ---------- endpoints ----------
 async function index(ctx) {
-    await new Promise(resolve => setTimeout(resolve, 250))
+    // await new Promise(resolve => setTimeout(resolve, 250))
     const attrs     = ['name']
     const params    = Object.assign(filter(ctx, attrs), sort(ctx), paginate(ctx))
     const customers = await Customers().find(params)
@@ -46,12 +46,11 @@ async function update(ctx) {
     let customer = await Customers().findOne(ctx.params.id)
     ctx.assert(customer, 404, 'customer not found')
 
-    const attrs = ctx.request.body.customer
+    const attrs = { id: customer.id, ...ctx.request.body.customer }
     ctx.assert(Customers().target.validate(attrs), 400, 'invalid customer attributes')
-    await Customers().update(customer.id, attrs)
+    customer = await Customers().save(attrs)
 
-    ctx.status = 204
-    ctx.body   = null
+    ctx.body = { customer }
 }
 
 async function destroy(ctx) {

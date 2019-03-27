@@ -44,14 +44,14 @@ async function create(ctx) {
 }
 
 async function update(ctx) {
-    const meter = await findById(ctx)
+    let meter = await findById(ctx)
     ctx.assert(meter, 404, 'meter not found')
 
-    const attrs = {...ctx.request.body.meter, locationId: meter.locationId}
+    const attrs = { id: meter.id, ...ctx.request.body.meter, locationId: meter.locationId }
     ctx.assert(Meters().target.validate(attrs), 400, 'invalid meter attributes')
-    await Meters().update(meter.id, attrs)
+    meter = await Meters().save(attrs)
 
-    ctx.status = 204
+    ctx.body = { meter }
 }
 
 async function destroy(ctx) {

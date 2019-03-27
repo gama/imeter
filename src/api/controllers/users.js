@@ -20,7 +20,7 @@ function mount(parentRouter, prefix = '/users') {
 
 // ---------- endpoints ----------
 async function index(ctx) {
-    await new Promise(resolve => setTimeout(resolve, 500))
+    // await new Promise(resolve => setTimeout(resolve, 500))
     const attrs  = ['firstName', 'lastName']
     const params = Object.assign(filter(ctx, attrs), sort(ctx), paginate(ctx))
     const users  = await Users().find(params)
@@ -29,7 +29,7 @@ async function index(ctx) {
 
 
 async function show(ctx) {
-    await new Promise(resolve => setTimeout(resolve, 350))
+    // await new Promise(resolve => setTimeout(resolve, 350))
     const user = await Users().findOne(ctx.params.id)
     ctx.assert(user, 404, 'user not found')
     ctx.body = {user: serialize(user)}
@@ -48,7 +48,7 @@ async function update(ctx) {
     let user = await Users().findOne(ctx.params.id)
     ctx.assert(user, 404, 'user not found')
 
-    const attrs = {...user, ...ctx.request.body.user}
+    const attrs = {id: user.id, password: user.password, ...ctx.request.body.user}
     ctx.assert(Users().target.validate(attrs), 400, 'invalid user attributes')
     user = await Users().save(attrs)
 

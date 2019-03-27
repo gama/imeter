@@ -49,19 +49,20 @@ async function create(ctx) {
 }
 
 async function update(ctx) {
-    const measurement = await findById(ctx)
+    let measurement = await findById(ctx)
     ctx.assert(measurement, 404, 'measurement not found')
 
     const attrs = {
+        id: measurement.id,
         ...ctx.request.body.measurement,
         operatorId: ctx.state.user.id,
         meterId:    measurement.meterId,
         timestamp:  measurement.timestamp.toISOString()
     }
     ctx.assert(Measurements().target.validate(attrs), 400, 'invalid measurement attributes')
-    await Measurements().update(measurement.id, attrs)
+    measurement = await Measurements().save(attrs)
 
-    ctx.status = 204
+    ctx.body = { measurement }
 }
 
 async function destroy(ctx) {

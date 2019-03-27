@@ -51,11 +51,11 @@ async function update(ctx) {
     let location = await Locations().findOne(ctx.params.id)
     ctx.assert(location && location.customerId === customerId(ctx), 404, 'location not found')
 
-    const attrs = {...ctx.request.body.location, customerId: location.customerId}
+    const attrs = { id: location.id, ...ctx.request.body.location, customerId: location.customerId }
     ctx.assert(Locations().target.validate(attrs), 400, 'invalid location attributes')
-    await Locations().update(location.id, attrs)
+    location = await Locations().save(attrs)
 
-    ctx.status = 204
+    ctx.body = { location } 
 }
 
 async function destroy(ctx) {

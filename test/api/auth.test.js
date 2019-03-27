@@ -12,9 +12,10 @@ const app    = require('./server')
 const server = app.callback()
 
 let user, Users
+beforeAll(async  () => app.init())
+afterAll(async   () => app.finish())
+beforeAll(async  () => Users = await db.getRepository('User'))
 beforeEach(async () => user = await Users.findOne({firstName: 'Admin'}, {}) )
-beforeAll(async ()  => Users = await db.getRepository('User'))
-afterAll(async ()   => db.closeConnection())
 
 test('login succeeds', async () => {
     expect((await protectedRequest(server, 'invalid-token')).status).toEqual(401)

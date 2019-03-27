@@ -12,8 +12,9 @@ const app    = require('./server')
 const server = app.callback()
 
 let Measurements
+beforeAll(async () => app.init())
+afterAll(async  () => app.finish())
 beforeAll(async () => Measurements = await db.getRepository('Measurement'))
-afterAll(async  () => db.closeConnection())
 afterEach(async () => await loadAllFixtures())
 
 
@@ -122,17 +123,18 @@ describe.each(userParams)('logged in as %s', (role, userName) => {
     })
 
     test(`measurements/update as ${role}`, async () => {
-        const attrs = { value: 567.8 }
+        const attrs    = { value: 567.8 }
+        const expected = { ...attrs, id: 213, meterId: 50 }
 
         const resp = await request(server)
             .put('/api/measurements/213')
             .send({measurement: attrs})
 
-        expect(resp.status).toEqual(204)
-        expect(resp.body).toEqual({})
+        expect(resp.status).toEqual(200)
+        expect(resp.body.measurement).toMatchObject(expected)
         expect(await Measurements.count({})).toEqual(114)
         expect(await Measurements.findOne({value: 12.6})).toBeUndefined()
-        expect(await Measurements.findOne(213)).toMatchObject({...attrs, meterId: 50})
+        expect(await Measurements.findOne(213)).toMatchObject(expected)
     })
 
     test(`measurements/destroy as ${role}`, async () => {

@@ -11,8 +11,9 @@ const app    = require('./server')
 const server = app.callback()
 
 let Meters
+beforeAll(async () => app.init())
+afterAll(async  () => app.finish())
 beforeAll(async () => Meters = await db.getRepository('Meter'))
-afterAll(async  () => db.closeConnection())
 afterEach(async () => await loadAllFixtures())
 
 
@@ -57,15 +58,15 @@ describe('logged in as customer', () => {
     })
 
     test('meters/update as customer', async () => {
-        const attrs = { serialNumber: '000051', kind: 'gas', model: 'M5', locationId: 10 }
-        const expected = {...attrs, locationId: 35}
+        const attrs    = { serialNumber: '000051', kind: 'gas', model: 'M5', locationId: 10 }
+        const expected = { ...attrs, id: 49, locationId: 35 }
 
-        const resp  = await request(server)
+        const resp = await request(server)
             .put('/api/meters/49')
-            .send({meter: attrs})
+            .send({ meter: attrs })
 
-        expect(resp.status).toEqual(204)
-        expect(resp.body).toEqual({})
+        expect(resp.status).toEqual(200)
+        expect(resp.body.meter).toMatchObject(expected)
         expect(await Meters.count({})).toEqual(16)
         expect(await Meters.findOne({serialNumber: '000010'})).toBeUndefined()
         expect(await Meters.findOne(49)).toMatchObject(expected)
